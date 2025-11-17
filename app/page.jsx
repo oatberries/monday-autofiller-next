@@ -228,7 +228,6 @@ export default function Page() {
             border: "1px solid #ddd",
             borderRadius: 8,
             maxHeight: 300,
-            maxWidth: 300,
             padding: 16,
             background: "white",
           }}
