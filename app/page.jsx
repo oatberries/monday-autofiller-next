@@ -227,7 +227,8 @@ export default function Page() {
           style={{
             border: "1px solid #ddd",
             borderRadius: 8,
-            minHeight: 300,
+            maxHeight: 300,
+            maxWidth: 300,
             padding: 16,
             background: "white",
           }}
