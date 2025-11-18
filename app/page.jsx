@@ -190,7 +190,7 @@ export default function Page() {
       const ab = await fetchArrayBufferViaProxy(publicUrl);
 
        //Fill the template with current item values
-      const filledAb = fillTemplate(originalAb, {
+      const filledAb = fillTemplate(ab, {
         petitioner: petitioner || "",
         respondent: respondent || "",
         csp: csp || "",
