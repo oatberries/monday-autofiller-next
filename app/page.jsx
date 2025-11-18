@@ -11,12 +11,48 @@ import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL} from "./lib/queries";
 import { runQuery } from "./lib/monday";
 import { Checkbox } from "@vibe/core";
 import { renderAsync } from "docx-preview";
+import PizZip from "pizzip";
+import Docxtemplater from "docxtemplater";
 
 // Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
 const monday = mondaySdk();
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
+
+function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
+
+  const uint8 = new Uint8Array(ab);
+  const zip = new PizZip(uint8);
+
+  const doc = new Docxtemplater(zip, {
+    paragraphLoop: true,
+    linebreaks: true,
+  });
+
+  
+  doc.setData({
+    petitioner,
+    respondent,
+    csp,
+    drNumber,
+  });
+
+  try {
+    doc.render();
+  } catch (error) {
+    console.error("Docxtemplater render error:", error);
+    throw new Error("Failed to render template");
+  }
+
+  //Return a new ArrayBuffer representing the filled DOCX
+  const out = doc.getZip().generate({
+    type: "arraybuffer",
+  });
+
+  return out;
+}
+
 
 export default function Page() {
   
@@ -44,7 +80,6 @@ export default function Page() {
     async function fetchContext() {
       try {
         const { data } = await monday.get("context"); 
-        // data contains { boardId, itemId, ... }
         setBoardId(data.boardId);
         setItemId(data.itemId);
       } catch (err) {
@@ -95,10 +130,10 @@ export default function Page() {
         (b) => b.name.trim().toLowerCase() === TEMPLATE_BOARD_NAME.toLowerCase()
         );
         
-        setTemplateBoardId(templateBoard.id);
         if(!templateBoard){
           console.error("Template board not found!");
         }
+        setTemplateBoardId(templateBoard.id);
 
         const templateGroup = templateBoard.groups.find(
           (g) => g.title.trim().toLowerCase() === ORDER_GROUP_TITLE.toLowerCase()
@@ -120,7 +155,7 @@ export default function Page() {
         setTemplateItemId(templateItem.id);
 
       }catch(err){
-        console.error("Error getting context:", err);
+        console.error("Error getting template context:", err);
       }
     }
 
@@ -130,7 +165,6 @@ export default function Page() {
   async function getDocxPublicUrl(templateItemId) {
     const data = await runQuery(FILE_URL, { itemId: [templateItemId] });
     const assets = data?.items?.[0]?.assets || [];
-    // Prefer .docx templates
     const docx = assets.find(a => (a.file_extension || "").toLowerCase() === ".docx");
     if (!docx?.public_url) {
       throw new Error("No .docx with a public_url found on this item.");
@@ -155,13 +189,20 @@ export default function Page() {
       const publicUrl = await getDocxPublicUrl(templateItemId);
       const ab = await fetchArrayBufferViaProxy(publicUrl);
 
-      // Clear previous preview
+       //Fill the template with current item values
+      const filledAb = fillTemplate(originalAb, {
+        petitioner: petitioner || "",
+        respondent: respondent || "",
+        csp: csp || "",
+        drNumber: drNumber || "",
+      });
+
       if (previewRef.current) {
         previewRef.current.innerHTML = "";
       }
-      // Render the DOCX into the container
-      await renderAsync(ab, previewRef.current, null, {
-        // options: https://www.npmjs.com/package/docx-preview
+
+      //Preview the filled doc
+      await renderAsync(filledAb, previewRef.current, null, {
         inWrapper: true,
         ignoreFonts: true,
       });
