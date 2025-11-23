@@ -28,6 +28,7 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
   const doc = new Docxtemplater(zip, {
     paragraphLoop: true,
     linebreaks: true,
+    delimiters: { start: '{', end: '}' },
   });
 
   
