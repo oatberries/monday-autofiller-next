@@ -11,8 +11,9 @@ import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL} from "./lib/queries";
 import { runQuery } from "./lib/monday";
 import { Checkbox } from "@vibe/core";
 import { renderAsync } from "docx-preview";
-import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import { saveAs } from "file-saver";
 
 // Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
 const monday = mondaySdk();
@@ -28,7 +29,6 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
   const doc = new Docxtemplater(zip, {
     paragraphLoop: true,
     linebreaks: true,
-    delimiters: { start: '{', end: '}' },
   });
 
   
@@ -50,6 +50,8 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
   const out = doc.getZip().generate({
     type: "arraybuffer",
   });
+
+  saveAs(out, "output.docx");
 
   return out;
 }
