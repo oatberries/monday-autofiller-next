@@ -51,7 +51,14 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
     type: "arraybuffer",
   });
 
-  saveAs(out, "output.docx");
+  const blob = doc.getZip().generate(
+    {
+      type: "blob",
+      mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    }
+  );
+
+  saveAs(blob, "output.docx");
 
   return out;
 }
