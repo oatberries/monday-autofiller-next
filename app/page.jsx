@@ -7,9 +7,9 @@ import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 //Explore more Monday React Components here: https://vibe.monday.com/
 import { AttentionBox, Button } from "@vibe/core";
-import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL} from "./lib/queries";
+import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES} from "./lib/queries";
 import { runQuery } from "./lib/monday";
-import { Checkbox } from "@vibe/core";
+import { Checkbox, Dropdown } from "@vibe/core";
 import { renderAsync } from "docx-preview";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
@@ -85,6 +85,20 @@ export default function Page() {
   const [templateItemName, setTemplateItemName] = useState(null);
   const [templateItemId, setTemplateItemId] = useState(null);
 
+  const [document, setDocuments] = useState([{documents: ''}]);
+
+  useEffect(() =>{
+    async function fetchOrderTypes() {
+      try{
+        const data = await runQuery(ORDER_TYPES);
+        console.log(data);
+      } catch(err){
+        console.error("Error getting context:", err);
+      }
+    }
+
+    fetchOrderTypes();
+  }, []);
 
   useEffect(() => {
     async function fetchContext() {
@@ -244,7 +258,7 @@ export default function Page() {
 
   return (
     <div className="App">
-      <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />
+  {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />
 
       <div style={{ padding: 16 }}>
         {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
@@ -270,21 +284,7 @@ export default function Page() {
         <p><strong>DOCX Public URL:</strong> {publicUrl || "—"}</p>
 
 
-      </div>
-
-      {/* Preview container */}
-        <div
-          ref={previewRef}
-          style={{
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            maxHeight: 300,
-            padding: 16,
-            background: "white",
-          }}
-        />
-
-      
+      </div>      */}
 
     </div>
     
