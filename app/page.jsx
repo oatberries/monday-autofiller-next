@@ -84,22 +84,11 @@ export default function Page() {
   const [templateGroupId, setTemplateGroupId] = useState(null);
   const [templateItemName, setTemplateItemName] = useState(null);
   const [templateItemId, setTemplateItemId] = useState(null);
-
+  const [orderTypes, setOrderTypes] = useState([{orderTypes: ''}]);
   const [document, setDocuments] = useState([{documents: ''}]);
 
-  useEffect(() =>{
-    async function fetchOrderTypes() {
-      try{
-        const data = await runQuery(ORDER_TYPES);
-        console.log(data);
-      } catch(err){
-        console.error("Error getting context:", err);
-      }
-    }
 
-    fetchOrderTypes();
-  }, []);
-
+  // KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number from
   useEffect(() => {
     async function fetchContext() {
       try {
@@ -115,6 +104,7 @@ export default function Page() {
     
   }, []);
 
+  //KEEP: here we extract the values that we need to fill the template with
   useEffect(() => {
     if (!itemId) return;
 
@@ -144,6 +134,47 @@ export default function Page() {
     })();
   }, [itemId]);
 
+  //New function: here we're gonna extract the names of each order type
+  useEffect(() =>{
+    async function fetchOrderTypes() {
+      try{
+        const data = await runQuery(ORDER_TYPES);
+        console.log(data);
+
+        const boards = data.boards;
+
+        const templateBoard = boards.find(
+        (b) => b.name.trim().toLowerCase() === TEMPLATE_BOARD_NAME.toLowerCase()
+        );
+
+        if(!templateBoard){
+          console.error("Template board not found!");
+        }
+        setTemplateBoardId(templateBoard.id);
+
+        const templateGroup = templateBoard.groups.find(
+          (g) => g.title.trim().toLowerCase() === ORDER_GROUP_TITLE.toLowerCase()
+        );
+        
+        if(!templateGroup){
+          console.error("Template group not found");
+        }
+        setTemplateGroupId(templateGroup.id);
+        
+        const items = templateGroup.items_page?.items ?? [];
+        //orderTypes should now be an array of the names of the different orders
+        const orders = items.map(item => item.name);
+
+        setOrderTypes(orders);
+
+      } catch(err){
+        console.error("Error getting context:", err);
+      }
+    }
+
+    fetchOrderTypes();
+  }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]);
+/*
   useEffect(() => {
     async function fetchTemplateContext(){
       try{
@@ -185,7 +216,9 @@ export default function Page() {
 
     fetchTemplateContext();
   }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE, templateItemName]);
+*/
 
+/*
   async function getDocxPublicUrl(templateItemId) {
     const data = await runQuery(FILE_URL, { itemId: [templateItemId] });
     const assets = data?.items?.[0]?.assets || [];
@@ -238,7 +271,7 @@ export default function Page() {
     }
   }
 
-
+*/
 
 
   useEffect(() => {
@@ -253,11 +286,19 @@ export default function Page() {
   }, []);
 
   //Some example what you can do with context, read more here: https://developer.monday.com/apps/docs/mondayget#requesting-context-and-settings-data
-  const attentionBoxText =
-    `Hello! Board ID: ${boardId ?? "loading"}, Item ID: ${itemId ?? "loading"}`;
+  //const attentionBoxText = `Hello! Board ID: ${boardId ?? "loading"}, Item ID: ${itemId ?? "loading"}`;
 
   return (
     <div className="App">
+
+    <p>TRA Boards ID: {boardId || "--"}</p>
+    <div>
+      {orderTypes.map(orders =>
+        (
+          <Dropdown key={orders}>{orders}</Dropdown>
+        )
+      )}
+    </div>
   {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />
 
       <div style={{ padding: 16 }}>
