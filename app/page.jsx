@@ -333,7 +333,7 @@ export default function Page() {
       <Accordion id="orderTypeList" >
         
         {orderTypes.map(order =>(
-          <AccordionItem id="orders" title={order} onClick={setOpenOrderType(order)} key={order}>
+          <AccordionItem id="orders" title={order} onClick={() => setOpenOrderType(order)} key={order}>
             <div>
               {order}
             </div>
@@ -341,14 +341,16 @@ export default function Page() {
               retrieveFileNames()
 
               {assetNames.map(doc =>(
+                <Checkbox label={doc} onClick={() => setSelectedDoc(doc)} ariaLabel="Checkbox option">
                  <div 
                     key={doc}
-                    onClick={() => setSelectedDoc(doc)}
+                    //onClick={() => setSelectedDoc(doc)}
                     style={{ cursor: "pointer", marginLeft: 20 }}
                   >
-                    {doc}
+                  
                     
                  </div>
+                </Checkbox>
               ))}
            }}
           </AccordionItem>
