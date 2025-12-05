@@ -298,9 +298,11 @@ export default function Page() {
     <div>
       <Accordion id="orderTypeList" >
         
-      {orderTypes.map(order =>(
-         <AccordionItem id="orders" title="In monday" key={order}>{order} </AccordionItem>
-       ))}
+        {orderTypes.map(order =>(
+          <AccordionItem id="orders" title={order} key={order}>
+            <div>Documents for {order} will go here…</div> 
+          </AccordionItem>
+        ))}
      
       </Accordion>
     </div>
