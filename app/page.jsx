@@ -188,7 +188,7 @@ export default function Page() {
     
 
     try{
-      const data = await runQuery(FILE_NAMES);
+      const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
       const items = data?.items;
       const assets = items?.assets;
@@ -333,7 +333,7 @@ export default function Page() {
       <Accordion id="orderTypeList" >
         
         {orderTypes.map(order =>(
-          <AccordionItem id="orders" title={order} onClick={() => setOpenOrderType(order)} key={order}>
+          <AccordionItem id="orders" title={order} onClick={() => {setOpenOrderType(order), setTemplateItemId(order.id)}} key={order}>
             <div>
               {order}
             </div>
