@@ -97,3 +97,22 @@ query OrderTypes{
   }
 }
 `;
+
+export const FILE_NAMES = `
+query FileURL ($itemId: [ID!]) {
+  items (ids: $itemId) {
+    id
+    name
+    assets(assets_source: all) {  
+      id
+      name
+      url
+      public_url
+      file_extension
+      file_size
+      uploaded_by { id name }
+    }
+  }
+}
+
+`;

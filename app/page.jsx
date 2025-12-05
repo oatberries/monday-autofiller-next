@@ -7,7 +7,7 @@ import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 //Explore more Monday React Components here: https://vibe.monday.com/
 import { AttentionBox, Button } from "@vibe/core";
-import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES} from "./lib/queries";
+import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES, FILE_NAMES} from "./lib/queries";
 import { runQuery } from "./lib/monday";
 import { Checkbox, Accordion, AccordionItem } from "@vibe/core";
 import { renderAsync } from "docx-preview";
@@ -86,9 +86,12 @@ export default function Page() {
   const [templateItemId, setTemplateItemId] = useState(null);
   //const [orderTypes, setOrderTypes] = useState([{orderTypes: ''}]);
   const [orderTypes, setOrderTypes] = useState([]);
+  const [orderId, setOrderId] = useState(null);
   const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
+  const [docNames, setDocNames] = useState([]);
   const [selectedDoc, setSelectedDoc] = useState(null);
+
 
 
   // KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number from
@@ -177,6 +180,38 @@ export default function Page() {
 
     fetchOrderTypes();
   }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]);
+
+  useEffect(() =>{
+
+    async function retrieveFileNames() {
+      
+    
+
+    try{
+      const data = await runQuery(FILE_NAMES);
+
+      const items = data?.items;
+      const assets = items?.assets;
+
+      const assetNames = assets.map(assets => assets.names);
+
+      setDocNames(assetNames);
+
+
+
+    }
+    catch(err){
+      //console.error("Error getting file names:", err);
+    }
+
+  }
+
+  retrieveFileNames();
+  },);
+
+  //function handleOnClick(){
+    //setSelectedDoc(order);
+  //}
 /*
   useEffect(() => {
     async function fetchTemplateContext(){
@@ -294,13 +329,28 @@ export default function Page() {
   return (
     <div className="App">
 
-    <p>TRA Boards ID: {boardId || "--"}</p>
     <div>
       <Accordion id="orderTypeList" >
         
         {orderTypes.map(order =>(
-          <AccordionItem id="orders" title={order} key={order}>
-            <div>Documents for {order} will go here…</div> 
+          <AccordionItem id="orders" title={order} onClick={setOpenOrderType(order)} key={order}>
+            <div>
+              {order}
+            </div>
+           {openOrderType === order && {
+              retrieveFileNames()
+
+              {assetNames.map(doc =>(
+                 <div 
+                    key={doc}
+                    onClick={() => setSelectedDoc(doc)}
+                    style={{ cursor: "pointer", marginLeft: 20 }}
+                  >
+                    {doc}
+                    
+                 </div>
+              ))}
+           }}
           </AccordionItem>
         ))}
      
