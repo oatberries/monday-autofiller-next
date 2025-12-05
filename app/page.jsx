@@ -9,7 +9,7 @@ import "@vibe/core/tokens";
 import { AttentionBox, Button } from "@vibe/core";
 import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES} from "./lib/queries";
 import { runQuery } from "./lib/monday";
-import { Checkbox, Dropdown } from "@vibe/core";
+import { Checkbox, Accordion, AccordionItem } from "@vibe/core";
 import { renderAsync } from "docx-preview";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
@@ -84,8 +84,11 @@ export default function Page() {
   const [templateGroupId, setTemplateGroupId] = useState(null);
   const [templateItemName, setTemplateItemName] = useState(null);
   const [templateItemId, setTemplateItemId] = useState(null);
-  const [orderTypes, setOrderTypes] = useState([{orderTypes: ''}]);
+  //const [orderTypes, setOrderTypes] = useState([{orderTypes: ''}]);
+  const [orderTypes, setOrderTypes] = useState([]);
   const [document, setDocuments] = useState([{documents: ''}]);
+  const [openOrderType, setOpenOrderType] = useState(null);
+  const [selectedDoc, setSelectedDoc] = useState(null);
 
 
   // KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number from
@@ -293,11 +296,13 @@ export default function Page() {
 
     <p>TRA Boards ID: {boardId || "--"}</p>
     <div>
-      {orderTypes.map(orders =>
-        (
-          <Dropdown key={orders}>{orders}</Dropdown>
-        )
-      )}
+      <Accordion id="orderTypeList" >
+        
+      {orderTypes.map(order =>(
+         <AccordionItem id="orders" title="In monday" key={order}>{order} </AccordionItem>
+       ))}
+     
+      </Accordion>
     </div>
   {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />
 
