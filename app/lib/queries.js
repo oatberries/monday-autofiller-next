@@ -90,6 +90,7 @@ query OrderTypes{
       title
       items_page{
         items{
+          id
           name
         }
       }

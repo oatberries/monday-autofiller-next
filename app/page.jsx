@@ -131,7 +131,7 @@ export default function Page() {
         setRespondent(byTitle["Respondent"] ?? "");
         setCsp(byTitle["CSP"] ?? "");
         setDRNumber(byTitle["DR#"] ?? "");
-        setTemplateItemName(byTitle["Type of Case"] ?? "");
+        //setTemplateItemName(byTitle["Type of Case"] ?? "");
 
       } catch (e) {
         setError(e.message || "Failed to fetch item values");
@@ -169,7 +169,13 @@ export default function Page() {
         
         const items = templateGroup.items_page?.items ?? [];
         //orderTypes should now be an array of the names of the different orders
-        const orders = items.map(item => item.name);
+
+        //const orders = items.map(item => item.name);
+        //orderTypes will be an array of objects with the itemId and item name
+        const orders = items.map(item => ({
+          id: item.id,
+          name: item.name,
+        }));
 
         setOrderTypes(orders);
 
@@ -181,12 +187,34 @@ export default function Page() {
     fetchOrderTypes();
   }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]);
 
+  useEffect(() => {
+  // If we don't have an item id yet, do nothing
+  if (!templateItemId) return;
+
+  async function fetchFileNames() {
+    try {
+      const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
+
+      //data.items is an array; we want the first item's assets
+      const assets = data?.items?.[0]?.assets ?? [];
+
+      //Grab the asset names
+      const names = assets.map(a => a.name);
+
+      setDocNames(names);
+    } catch (err) {
+      console.error("Error getting file names:", err);
+    }
+  }
+
+  fetchFileNames();
+}, [templateItemId]);
+
+/*
   useEffect(() =>{
 
     async function retrieveFileNames() {
-      
     
-
     try{
       const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
@@ -197,8 +225,6 @@ export default function Page() {
 
       setDocNames(assetNames);
 
-
-
     }
     catch(err){
       //console.error("Error getting file names:", err);
@@ -208,7 +234,7 @@ export default function Page() {
 
   retrieveFileNames();
   },);
-
+*/
   //function handleOnClick(){
     //setSelectedDoc(order);
   //}
@@ -331,28 +357,39 @@ export default function Page() {
 
     <div>
       <Accordion id="orderTypeList" >
-        
         {orderTypes.map(order =>(
-          <AccordionItem id="orders" title={order} onClick={() => {setOpenOrderType(order), setTemplateItemId(order.id)}} key={order}>
+          <AccordionItem
+            key={order.id}
+            title={order.name}
+            onClick={() => {
+            //set which order type is open
+            setOpenOrderType(order.id), 
+            //set the itemId whose docs we want to load
+            setTemplateItemId(order.id)
+            }} 
+          >
             <div>
               {order}
             </div>
-           {openOrderType === order && {
-              retrieveFileNames()
 
-              {assetNames.map(doc =>(
-                <Checkbox label={doc} onClick={() => setSelectedDoc(doc)} ariaLabel="Checkbox option">
-                 <div 
-                    key={doc}
-                    //onClick={() => setSelectedDoc(doc)}
-                    style={{ cursor: "pointer", marginLeft: 20 }}
-                  >
-                  
-                    
-                 </div>
-                </Checkbox>
-              ))}
-           }}
+              {openOrderType === order.id && (
+              <div style={{ paddingLeft: 16, paddingTop: 8 }}>
+                {docNames.length === 0 ? (
+                  <div>No documents attached to this order type.</div>
+                ) : (
+                  docNames.map((doc) => (
+                    <Checkbox
+                      key={doc}
+                      label={doc}
+                      checked={selectedDoc === doc}
+                      onChange={() => setSelectedDoc(doc)}
+                      ariaLabel={doc}
+                    />
+                  ))
+                )}
+              </div>
+            )}
+           
           </AccordionItem>
         ))}
      
