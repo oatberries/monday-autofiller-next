@@ -193,7 +193,17 @@ export default function Page() {
 
   async function fetchFileNames() {
     try {
-      const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
+
+      const numericId = Number(templateItemId);
+
+      if (Number.isNaN(numericId)) {
+        console.error("templateItemId is not a valid number:", templateItemId);
+        return;
+      }
+
+      const data = await runQuery(FILE_NAMES, { itemId: [numericId] });
+
+      //const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
       //data.items is an array; we want the first item's assets
       const assets = data?.items?.[0]?.assets ?? [];
