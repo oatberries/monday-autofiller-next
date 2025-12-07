@@ -368,10 +368,7 @@ export default function Page() {
             setTemplateItemId(order.id)
             }} 
           >
-            <div>
-              {order}
-            </div>
-
+            
               {openOrderType === order.id && (
               <div style={{ paddingLeft: 16, paddingTop: 8 }}>
                 {docNames.length === 0 ? (
