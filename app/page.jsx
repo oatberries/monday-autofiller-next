@@ -200,7 +200,9 @@ export default function Page() {
         console.error("templateItemId is not a valid number:", templateItemId);
         return;
       }
-
+      
+      console.log("templateItemId raw:", templateItemId, typeof templateItemId);
+      console.log("sending itemId:", [numericId]);
       const data = await runQuery(FILE_NAMES, { itemId: [numericId] });
 
       //const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });

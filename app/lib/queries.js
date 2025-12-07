@@ -100,7 +100,7 @@ query OrderTypes{
 `;
 
 export const FILE_NAMES = `
-query FileURL ($itemId: [ID!]) {
+query FileURL ($itemId: [Int]) {
   items (ids: $itemId) {
     id
     name
