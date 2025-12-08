@@ -29,12 +29,9 @@ export const ITEM_COLUMNS_BY_IDS = `
 export const ITEM_NAME_AND_VALUES = `
   query ItemNameAndValues($itemId: [ID!]) {
     items(ids: $itemId) {
-      id
       name
       column_values {
-        id
         text
-        value
         column { title }
       }
     }
@@ -100,7 +97,7 @@ query OrderTypes{
 `;
 
 export const FILE_NAMES = `
-query FileURL ($itemId: [Int]) {
+query FileURL ($itemId: [ID!]) {
   items (ids: $itemId) {
     id
     name

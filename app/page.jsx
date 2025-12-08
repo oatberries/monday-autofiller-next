@@ -70,7 +70,6 @@ export default function Page() {
   const [boardId, setBoardId] = useState(null);
   const [itemId, setItemId] = useState(null);
 
-  const [caseType, setCaseType] = useState(null);
   const[petitioner, setPetitioner] = useState(null);
   const[respondent, setRespondent] = useState(null);
   const [csp, setCsp] = useState(null);
@@ -126,12 +125,10 @@ export default function Page() {
           wanted.map(cv => [cv.column.title, cv.text ?? ""])
         );
 
-        setCaseType(byTitle["Type of Case"] ?? "");
         setPetitioner(byTitle["Petitioner"] ?? "");
         setRespondent(byTitle["Respondent"] ?? "");
         setCsp(byTitle["CSP"] ?? "");
         setDRNumber(byTitle["DR#"] ?? "");
-        //setTemplateItemName(byTitle["Type of Case"] ?? "");
 
       } catch (e) {
         setError(e.message || "Failed to fetch item values");
@@ -171,11 +168,13 @@ export default function Page() {
         //orderTypes should now be an array of the names of the different orders
 
         //const orders = items.map(item => item.name);
+        const orders = items;
         //orderTypes will be an array of objects with the itemId and item name
-        const orders = items.map(item => ({
+        /*const orders = items.map(item => ({
           id: item.id,
           name: item.name,
         }));
+        */
 
         setOrderTypes(orders);
 
@@ -193,19 +192,7 @@ export default function Page() {
 
   async function fetchFileNames() {
     try {
-
-      const numericId = Number(templateItemId);
-
-      if (Number.isNaN(numericId)) {
-        console.error("templateItemId is not a valid number:", templateItemId);
-        return;
-      }
-      
-      console.log("templateItemId raw:", templateItemId, typeof templateItemId);
-      console.log("sending itemId:", [numericId]);
-      const data = await runQuery(FILE_NAMES, { itemId: [numericId] });
-
-      //const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
+      const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
       //data.items is an array; we want the first item's assets
       const assets = data?.items?.[0]?.assets ?? [];
