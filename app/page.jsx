@@ -391,19 +391,18 @@ export default function Page() {
      
       </Accordion>
     </div>
-  {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />
+  {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />  */}
 
       <div style={{ padding: 16 }}>
         {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
         <h2>Current Item Fields</h2>
         <p><strong>boardId:</strong> {boardId || "—"}</p>
         <p><strong>itemId:</strong> {itemId || "—"}</p>
-        <p><strong>Type of case:</strong> {caseType || "—"}</p>
         <p><strong>Petitioner:</strong> {petitioner || "—"}</p>
         <p><strong>Respondent:</strong> {respondent || "—"}</p>
         <p><strong>CSP:</strong> {csp || "—"}</p>
         <p><strong>DR#:</strong> {drNumber || "—"}</p>
-
+{/*
         <div style={{ marginTop: 24, marginBottom: 12 }}>
           <Button onClick={handlePreviewClick} disabled={!itemId || loadingPreview}>
             {loadingPreview ? "Loading preview..." : "Preview DOCX template"}
@@ -415,9 +414,9 @@ export default function Page() {
         <p><strong>Templates Item Name:</strong> {templateItemName || "—"}</p>
         <p><strong>Templates Item ID:</strong> {templateItemId || "—"}</p>
         <p><strong>DOCX Public URL:</strong> {publicUrl || "—"}</p>
+*/}
 
-
-      </div>      */}
+      </div>   
 
     </div>
     
