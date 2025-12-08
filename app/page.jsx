@@ -93,7 +93,7 @@ export default function Page() {
 
 
 
-  // KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number from
+  // KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number
   useEffect(() => {
     async function fetchContext() {
       try {
@@ -119,7 +119,7 @@ export default function Page() {
         const item = data?.items?.[0];
         const cvs = item?.column_values ?? [];
 
-        //Keep only CSP, DR#, Type of Case, Respondent, and Petitioner
+        //Keep only CSP, DR#, Respondent, and Petitioner
         const wanted = cvs.filter(cv => WANTED_TITLES.includes(cv?.column?.title));
         const byTitle = Object.fromEntries(
           wanted.map(cv => [cv.column.title, cv.text ?? ""])
@@ -153,7 +153,7 @@ export default function Page() {
         if(!templateBoard){
           console.error("Template board not found!");
         }
-        setTemplateBoardId(templateBoard.id);
+        //setTemplateBoardId(templateBoard.id);
 
         const templateGroup = templateBoard.groups.find(
           (g) => g.title.trim().toLowerCase() === ORDER_GROUP_TITLE.toLowerCase()
@@ -162,7 +162,7 @@ export default function Page() {
         if(!templateGroup){
           console.error("Template group not found");
         }
-        setTemplateGroupId(templateGroup.id);
+        //setTemplateGroupId(templateGroup.id);
         
         const items = templateGroup.items_page?.items ?? [];
         //orderTypes should now be an array of the names of the different orders

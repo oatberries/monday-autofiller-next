@@ -80,10 +80,8 @@ query FileURL ($itemId: [ID!]) {
 export const ORDER_TYPES = `
 query OrderTypes{
   boards{
-    id
     name
     groups{
-      id
       title
       items_page{
         items{
