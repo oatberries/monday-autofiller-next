@@ -352,9 +352,11 @@ export default function Page() {
   //const attentionBoxText = `Hello! Board ID: ${boardId ?? "loading"}, Item ID: ${itemId ?? "loading"}`;
 
   return (
-    <div className="App">
+    <div className="App" >
+      <div className="scroll-container" style={{height: "100vh", autoflowY: auto, autoflowX: hidden}}>
+        <div >
 
-    <div>
+
       <Accordion id="orderTypeList" >
         {orderTypes.map(order =>(
           <AccordionItem
@@ -390,6 +392,8 @@ export default function Page() {
         ))}
      
       </Accordion>
+
+
     </div>
   {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />  */}
 
@@ -416,8 +420,8 @@ export default function Page() {
         <p><strong>DOCX Public URL:</strong> {publicUrl || "—"}</p>
 */}
 
-      </div>   
-
+        </div>   
+      </div>
     </div>
     
   );
