@@ -353,7 +353,7 @@ export default function Page() {
 
   return (
     <div className="App" >
-      <div className="scroll-container" style={{height: "100vh", autoflowY: auto, autoflowX: hidden}}>
+      <div className="scroll-container" style={{height: "100vh", autoflowY: "auto", autoflowX: "hidden"}}>
         <div >
 
 
