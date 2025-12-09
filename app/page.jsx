@@ -63,6 +63,29 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
   return out;
 }
 
+async function getSelectedDocPublicUrl(templateItemId, docName) {
+  
+  const data = await runQuery(FILE_URL, { itemId: [templateItemId] });
+
+  const assets = data?.items?.[0]?.assets || [];
+
+  //Find the asset whose name matches the selected doc name
+  const asset = assets.find((a) => a.name === docName);
+
+  if (!asset?.public_url) {
+    throw new Error("No file with a public URL found for the selected document.");
+  }
+
+  return asset.public_url; //short-lived; we’ll fetch it immediately via proxy
+}
+
+async function fetchArrayBufferViaProxy(publicUrl) {
+  // Your existing API route that bypasses CORS & auth issues
+  const r = await fetch(`/api/file-proxy?u=${encodeURIComponent(publicUrl)}`);
+  if (!r.ok) throw new Error(`Proxy fetch failed: ${r.status}`);
+  return r.arrayBuffer();
+}
+
 
 export default function Page() {
   
@@ -90,6 +113,8 @@ export default function Page() {
   const [openOrderType, setOpenOrderType] = useState(null);
   const [docNames, setDocNames] = useState([]);
   const [selectedDoc, setSelectedDoc] = useState(null);
+  const [fillingDoc, setFillingDoc] = useState(false);
+
 
 
 
@@ -208,6 +233,42 @@ export default function Page() {
 
   fetchFileNames();
 }, [templateItemId]);
+
+async function handleFillAndDownloadClick() {
+  // Basic guard rails
+  if (!templateItemId || !selectedDoc) {
+    setError("Please select an order type and a document first.");
+    return;
+  }
+
+  setError("");
+  setFillingDoc(true);
+
+  try {
+    //Get the public URL for the asset matching `selectedDoc`
+    const publicUrl = await getSelectedDocPublicUrl(templateItemId, selectedDoc);
+
+    //Download the DOCX bytes through your proxy
+    const ab = await fetchArrayBufferViaProxy(publicUrl);
+
+    //Fill the template with the current item’s values
+    await fillTemplate(ab, {
+      petitioner: petitioner || "",
+      respondent: respondent || "",
+      csp: csp || "",
+      drNumber: drNumber || "",
+    });
+
+    //`fillTemplate` already calls `saveAs(blob, "output.docx")`,
+    //so the user will get a download automatically here.
+  } catch (e) {
+    console.error(e);
+    setError(e.message || "Failed to fill and download document.");
+  } finally {
+    setFillingDoc(false);
+  }
+}
+
 
 /*
   useEffect(() =>{
@@ -421,6 +482,16 @@ export default function Page() {
 */}
 
         </div>   
+
+        <div style={{ marginTop: 24 }}>
+          <Button
+            onClick={handleFillAndDownloadClick}
+            disabled={!selectedDoc || !templateItemId || fillingDoc}
+          >
+            {fillingDoc ? "Filling document..." : "Fill and download selected doc"}
+          </Button>
+        </div>
+
       </div>
     </div>
     
