@@ -214,7 +214,7 @@ export default function Page() {
   }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]);
 
   useEffect(() => {
-  // If we don't have an item id yet, do nothing
+  //if we don't have an item id yet, do nothing
   if (!templateItemId) return;
 
   async function fetchFileNames() {
@@ -224,6 +224,20 @@ export default function Page() {
       //data.items is an array; we want the first item's assets
       const assets = data?.items?.[0]?.assets ?? [];
 
+      const docs = assets.map(a => ({
+        name: a.name,
+        //try file_extension first, fall back to checking the name
+        isDocx:
+          (a.file_extension && a.file_extension.toLowerCase() === "docx") ||
+          a.name.toLowerCase().endsWith(".docx"),
+      }));
+
+      setDocNamesByItem(prev => ({
+        ...prev,
+        [templateItemId]: docs,
+      }));
+
+/*
       //Grab the asset names
       const names = assets.map(a => a.name);
 
@@ -232,7 +246,7 @@ export default function Page() {
         ...prev,
         [templateItemId]: names,
       }));
-
+*/
     } catch (err) {
       console.error("Error getting file names:", err);
     }
@@ -512,7 +526,7 @@ function toggleDocSelection(itemId, docName) {
                   ))
                 )}
 */}
-                {(docNamesByItem[order.id] || []).length === 0 ? (
+                {/*(docNamesByItem[order.id] || []).length === 0 ? (
                   <div>No documents attached to this order type.</div>
                 ) : (
                   (docNamesByItem[order.id] || []).map((doc) => (
@@ -526,7 +540,44 @@ function toggleDocSelection(itemId, docName) {
                       ariaLabel={doc}
                     />
                   ))
+                )*/}
+
+                {(docNamesByItem[order.id] || []).length === 0 ? (
+                  <div>No documents attached to this order type.</div>
+                ) : (
+                  (docNamesByItem[order.id] || []).map(({ name: label, isDocx }) => (
+                    <div
+                      key={label}
+                      style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}
+                    >
+                      <Checkbox
+                        label={label}
+                        disabled={!isDocx}
+                        checked={
+                          isDocx &&
+                          selectedDocs.some(
+                            (d) => d.itemId === order.id && d.docName === label
+                          )
+                        }
+                        onChange={() => {
+                          if (isDocx) {
+                            toggleDocSelection(order.id, label);
+                          }
+                        }}
+                        ariaLabel={label}
+                      />
+
+                      {!isDocx && (
+                        <span style={{ fontSize: 12, color: "crimson" }}>
+                          ! This document must be .docx to be autofilled
+                        </span>
+                      )}
+                    </div>
+                  ))
                 )}
+
+
+
               </div>
             )}
            
