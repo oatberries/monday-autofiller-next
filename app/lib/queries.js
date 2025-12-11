@@ -94,6 +94,24 @@ query OrderTypes{
 }
 `;
 
+export const ORDER_TYPES2 = `
+query OrderTypes{
+  boards{
+    name
+    groups{
+      title
+      items_page{
+        items{
+          id
+          name
+        }
+      }
+    }
+  }
+}
+`;
+
+
 export const FILE_NAMES = `
 query FileURL ($itemId: [ID!]) {
   items (ids: $itemId) {

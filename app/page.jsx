@@ -217,6 +217,8 @@ export default function Page() {
   //if we don't have an item id yet, do nothing
   if (!templateItemId) return;
 
+  //if (docNamesByItem[templateItemId]) return;
+
   async function fetchFileNames() {
     try {
       const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
@@ -256,24 +258,12 @@ export default function Page() {
 }, [templateItemId]);
 
 async function handleFillAndDownloadClick() {
-  /*
-  if (!templateItemId || !selectedDoc) {
-    setError("Please select an order type and a document first.");
-    return;
-  }
-*/
 
   if (selectedDocs.length === 0) {
     setError("Please select at least one document first.");
     return;
   }
 
-  /*
-  if (!templateItemId || selectedDocs.length === 0) {
-    setError("Please select an order type and at least one document first.");
-    return;
-  }
-*/
   setError("");
   setFillingDoc(true);
 
@@ -306,15 +296,7 @@ async function handleFillAndDownloadClick() {
     setFillingDoc(false);
   }
 }
-/*
-function toggleDocSelection(docName) {
-  setSelectedDocs((prev) =>
-    prev.includes(docName)
-      ? prev.filter((d) => d !== docName) //uncheck
-      : [...prev, docName]               //check
-  );
-}
-*/
+
 function toggleDocSelection(itemId, docName) {
   setSelectedDocs(prev => {
     const exists = prev.find(
@@ -473,11 +455,7 @@ function toggleDocSelection(itemId, docName) {
     });
   }, []);
 
-  //Some example what you can do with context, read more here: https://developer.monday.com/apps/docs/mondayget#requesting-context-and-settings-data
-  //const attentionBoxText = `Hello! Board ID: ${boardId ?? "loading"}, Item ID: ${itemId ?? "loading"}`;
-
-  // Build a preview-friendly structure: { "Order Name": ["Doc1.docx", "Doc2.docx", ...], ... }
-  const groupedSelectedDocs = selectedDocs.reduce((acc, { itemId, docName }) => {
+    const groupedSelectedDocs = selectedDocs.reduce((acc, { itemId, docName }) => {
     const order = orderTypes.find((o) => o.id === itemId);
     const orderLabel = order ? order.name : `Order ${itemId}`;
 
@@ -489,8 +467,9 @@ function toggleDocSelection(itemId, docName) {
     return acc;
   }, {});
 
+    
 
-  return (
+ /* return (
     <div className="App" >
       <div className="scroll-container" style={{height: "100vh", overflowY: "auto", overflowX: "hidden"}}>
         <div >
@@ -511,37 +490,8 @@ function toggleDocSelection(itemId, docName) {
             
               {openOrderType === order.id && (
               <div style={{ paddingLeft: 16, paddingTop: 8 }}>
-{/*
-                {docNames.length === 0 ? (
-                  <div>No documents attached to this order type.</div>
-                ) : (
-                  docNames.map((doc) => (
-                    <Checkbox
-                      key={doc}
-                      label={doc}
-                      checked={selectedDocs.includes(doc)}
-                      onChange={() => toggleDocSelection(doc)}
-                      ariaLabel={doc}
-                    />
-                  ))
-                )}
-*/}
-                {/*(docNamesByItem[order.id] || []).length === 0 ? (
-                  <div>No documents attached to this order type.</div>
-                ) : (
-                  (docNamesByItem[order.id] || []).map((doc) => (
-                    <Checkbox
-                      key={doc}
-                      label={doc}
-                      checked={selectedDocs.some(
-                        d => d.itemId === order.id && d.docName === doc
-                      )}
-                      onChange={() => toggleDocSelection(order.id, doc)}
-                      ariaLabel={doc}
-                    />
-                  ))
-                )*/}
 
+                
                 {(docNamesByItem[order.id] || []).length === 0 ? (
                   <div>No documents attached to this order type.</div>
                 ) : (
@@ -632,6 +582,166 @@ function toggleDocSelection(itemId, docName) {
       </div>
     </div>
     
+  );*/
+
+  return (
+    <div className="App tra-root">
+      <div className="tra-shell">
+        <header className="tra-header">
+          <div>
+            <h1 className="tra-title">TRA Document Filler</h1>
+            <p className="tra-subtitle">
+              Select order types and .docx templates to auto-fill with this item&apos;s data.
+            </p>
+          </div>
+          {fillingDoc && (
+            <span className="tra-status-tag">Working…</span>
+          )}
+        </header>
+
+        <main className="tra-layout">
+          {/* LEFT COLUMN: Order types & templates */}
+          <section className="tra-column tra-column--orders">
+            <h2 className="tra-section-title">Order types</h2>
+
+            <div className="tra-card tra-card--scroll">
+              <Accordion id="orderTypeList">
+                {orderTypes.map((order) => (
+                  <AccordionItem
+                    key={order.id}
+                    title={order.name}
+                    onClick={() => {
+                      setOpenOrderType(order.id);
+                      setTemplateItemId(order.id);
+                    }}
+                  >
+                    {openOrderType === order.id && (
+                      <div className="tra-doc-list">
+                        {(docNamesByItem[order.id] || []).length === 0 ? (
+                          <div className="tra-empty-text">
+                            No documents attached to this order type.
+                          </div>
+                        ) : (
+                          (docNamesByItem[order.id] || []).map(({ name: label, isDocx }) => (
+                            <div
+                              key={label}
+                              className="tra-doc-row"
+                            >
+                              <Checkbox
+                                label={label}
+                                disabled={!isDocx}
+                                checked={
+                                  isDocx &&
+                                  selectedDocs.some(
+                                    (d) => d.itemId === order.id && d.docName === label
+                                  )
+                                }
+                                onChange={() => {
+                                  if (isDocx) {
+                                    toggleDocSelection(order.id, label);
+                                  }
+                                }}
+                                ariaLabel={label}
+                              />
+
+                              {!isDocx && (
+                                <span className="tra-doc-warning">
+                                  This file must be .docx to be autofilled
+                                </span>
+                              )}
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </section>
+
+          {/* RIGHT COLUMN: Item details, selection summary, actions */}
+          <section className="tra-column tra-column--details">
+            {/* Error box */}
+            {error && (
+              <div className="tra-card">
+                <AttentionBox
+                  title="Something went wrong"
+                  text={error}
+                  type={AttentionBox.types.DANGER}
+                />
+              </div>
+            )}
+
+            {/* Current item fields */}
+            <div className="tra-card">
+              <h2 className="tra-section-title">Current item fields</h2>
+              <dl className="tra-fields-grid">
+                <div>
+                  <dt>Board ID</dt>
+                  <dd>{boardId || "—"}</dd>
+                </div>
+                <div>
+                  <dt>Item ID</dt>
+                  <dd>{itemId || "—"}</dd>
+                </div>
+                <div>
+                  <dt>Petitioner</dt>
+                  <dd>{petitioner || "—"}</dd>
+                </div>
+                <div>
+                  <dt>Respondent</dt>
+                  <dd>{respondent || "—"}</dd>
+                </div>
+                <div>
+                  <dt>CSP</dt>
+                  <dd>{csp || "—"}</dd>
+                </div>
+                <div>
+                  <dt>DR#</dt>
+                  <dd>{drNumber || "—"}</dd>
+                </div>
+              </dl>
+            </div>
+
+            {/* Selected docs summary */}
+            {selectedDocs.length > 0 && (
+              <div className="tra-card">
+                <h2 className="tra-section-title">Selected documents</h2>
+                <ul className="tra-selected-list">
+                  {Object.entries(groupedSelectedDocs).map(([orderLabel, docs]) => (
+                    <li key={orderLabel} className="tra-selected-group">
+                      <span className="tra-selected-order">{orderLabel}</span>
+                      <ul className="tra-selected-docs">
+                        {docs.map((name) => (
+                          <li key={orderLabel + name}>{name}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Primary action */}
+            <div className="tra-footer">
+              <Button
+                onClick={handleFillAndDownloadClick}
+                disabled={selectedDocs.length === 0 || fillingDoc}
+                size={Button.sizes.LARGE}
+              >
+                {fillingDoc ? "Filling documents..." : "Fill & download selected docs"}
+              </Button>
+              {selectedDocs.length === 0 && (
+                <span className="tra-footer-hint">
+                  Select at least one .docx template from the list on the left.
+                </span>
+              )}
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
   );
 }
 

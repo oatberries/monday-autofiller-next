@@ -1,0 +1,179 @@
+.App.tra-root {
+  height: 100vh;
+  background: #f5f6f8;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #323338;
+}
+
+.tra-shell {
+  height: 100%;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tra-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tra-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tra-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #676879;
+}
+
+.tra-status-tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #cce5ff;
+  color: #003a75;
+  white-space: nowrap;
+}
+
+/* Layout */
+
+.tra-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 16px;
+  min-height: 0; /* important for child scrolling */
+}
+
+.tra-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.tra-column--orders {
+  min-width: 0;
+}
+
+.tra-column--details {
+  min-width: 0;
+}
+
+/* Cards */
+
+.tra-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e6e9ef;
+}
+
+.tra-card--scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Titles & text */
+
+.tra-section-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tra-empty-text {
+  font-size: 13px;
+  color: #80828f;
+  padding: 4px 0 8px;
+}
+
+/* Doc list inside accordion */
+
+.tra-doc-list {
+  padding-top: 8px;
+}
+
+.tra-doc-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.tra-doc-warning {
+  font-size: 11px;
+  color: #c21b1b;
+}
+
+/* Definition list for fields */
+
+.tra-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px 16px;
+  margin: 4px 0 0;
+}
+
+.tra-fields-grid dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #80828f;
+  margin-bottom: 2px;
+}
+
+.tra-fields-grid dd {
+  margin: 0;
+  font-size: 13px;
+  color: #323338;
+}
+
+/* Selected documents */
+
+.tra-selected-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+}
+
+.tra-selected-group {
+  margin-bottom: 8px;
+}
+
+.tra-selected-order {
+  font-size: 13px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.tra-selected-docs {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 0;
+  font-size: 13px;
+}
+
+/* Footer */
+
+.tra-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.tra-footer-hint {
+  font-size: 12px;
+  color: #80828f;
+}
