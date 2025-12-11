@@ -255,7 +255,7 @@ async function handleFillAndDownloadClick() {
     for (const docName of selectedDocs) {
 
     //Get the public URL for the asset matching `selectedDoc`
-    const publicUrl = await getSelectedDocPublicUrl(templateItemId, selectedDoc);
+    const publicUrl = await getSelectedDocPublicUrl(templateItemId, docName);
 
     //Download the DOCX bytes through your proxy
     const ab = await fetchArrayBufferViaProxy(publicUrl);
