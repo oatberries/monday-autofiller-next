@@ -236,9 +236,14 @@ export default function Page() {
 }, [templateItemId]);
 
 async function handleFillAndDownloadClick() {
-  
+  /*
   if (!templateItemId || !selectedDoc) {
     setError("Please select an order type and a document first.");
+    return;
+  }
+*/
+  if (!templateItemId || selectedDocs.length === 0) {
+    setError("Please select an order type and at least one document first.");
     return;
   }
 
@@ -246,6 +251,9 @@ async function handleFillAndDownloadClick() {
   setFillingDoc(true);
 
   try {
+
+    for (const docName of selectedDocs) {
+
     //Get the public URL for the asset matching `selectedDoc`
     const publicUrl = await getSelectedDocPublicUrl(templateItemId, selectedDoc);
 
@@ -260,11 +268,12 @@ async function handleFillAndDownloadClick() {
       drNumber: drNumber || "",
     });
 
+  }
     //`fillTemplate` already calls `saveAs(blob, "output.docx")`,
     //so the user will get a download automatically here.
   } catch (e) {
     console.error(e);
-    setError(e.message || "Failed to fill and download document.");
+    setError(e.message || "Failed to fill and download documents.");
   } finally {
     setFillingDoc(false);
   }
@@ -494,7 +503,8 @@ function toggleDocSelection(docName) {
         <div style={{ marginTop: 24 }}>
           <Button
             onClick={handleFillAndDownloadClick}
-            disabled={!selectedDocs || !templateItemId || fillingDoc}
+            disabled={selectedDocs.length === 0 || !templateItemId || fillingDoc}
+            //disabled={!selectedDocs || !templateItemId || fillingDoc}
           >
             {fillingDoc ? "Filling document..." : "Fill and download selected docs"}
           </Button>
