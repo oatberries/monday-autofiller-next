@@ -111,7 +111,8 @@ export default function Page() {
   const [orderId, setOrderId] = useState(null);
   const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
-  const [docNames, setDocNames] = useState([]);
+  //const [docNames, setDocNames] = useState([]);
+  const [docNamesByItem, setDocNamesByItem] = useState({});
   //const [selectedDoc, setSelectedDoc] = useState(null);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [fillingDoc, setFillingDoc] = useState(false);
@@ -226,7 +227,12 @@ export default function Page() {
       //Grab the asset names
       const names = assets.map(a => a.name);
 
-      setDocNames(names);
+      //setDocNames(names);
+      setDocNamesByItem(prev => ({
+        ...prev,
+        [templateItemId]: names,
+      }));
+
     } catch (err) {
       console.error("Error getting file names:", err);
     }
@@ -242,17 +248,25 @@ async function handleFillAndDownloadClick() {
     return;
   }
 */
+
+  if (selectedDocs.length === 0) {
+    setError("Please select at least one document first.");
+    return;
+  }
+
+  /*
   if (!templateItemId || selectedDocs.length === 0) {
     setError("Please select an order type and at least one document first.");
     return;
   }
-
+*/
   setError("");
   setFillingDoc(true);
 
   try {
 
-    for (const docName of selectedDocs) {
+    //for (const docName of selectedDocs) {
+    for (const { itemId: templateItemId, docName } of selectedDocs) {
 
     //Get the public URL for the asset matching `selectedDoc`
     const publicUrl = await getSelectedDocPublicUrl(templateItemId, docName);
@@ -278,7 +292,7 @@ async function handleFillAndDownloadClick() {
     setFillingDoc(false);
   }
 }
-
+/*
 function toggleDocSelection(docName) {
   setSelectedDocs((prev) =>
     prev.includes(docName)
@@ -286,6 +300,25 @@ function toggleDocSelection(docName) {
       : [...prev, docName]               //check
   );
 }
+*/
+function toggleDocSelection(itemId, docName) {
+  setSelectedDocs(prev => {
+    const exists = prev.find(
+      d => d.itemId === itemId && d.docName === docName
+    );
+
+    if (exists) {
+      //uncheck: remove that pair
+      return prev.filter(
+        d => !(d.itemId === itemId && d.docName === docName)
+      );
+    }
+
+    //check: add new pair
+    return [...prev, { itemId, docName }];
+  });
+}
+
 
 /*
   useEffect(() =>{
@@ -450,6 +483,7 @@ function toggleDocSelection(docName) {
             
               {openOrderType === order.id && (
               <div style={{ paddingLeft: 16, paddingTop: 8 }}>
+{/*
                 {docNames.length === 0 ? (
                   <div>No documents attached to this order type.</div>
                 ) : (
@@ -459,6 +493,22 @@ function toggleDocSelection(docName) {
                       label={doc}
                       checked={selectedDocs.includes(doc)}
                       onChange={() => toggleDocSelection(doc)}
+                      ariaLabel={doc}
+                    />
+                  ))
+                )}
+*/}
+                {(docNamesByItem[order.id] || []).length === 0 ? (
+                  <div>No documents attached to this order type.</div>
+                ) : (
+                  (docNamesByItem[order.id] || []).map((doc) => (
+                    <Checkbox
+                      key={doc}
+                      label={doc}
+                      checked={selectedDocs.some(
+                        d => d.itemId === order.id && d.docName === doc
+                      )}
+                      onChange={() => toggleDocSelection(order.id, doc)}
                       ariaLabel={doc}
                     />
                   ))
@@ -503,8 +553,9 @@ function toggleDocSelection(docName) {
         <div style={{ marginTop: 24 }}>
           <Button
             onClick={handleFillAndDownloadClick}
-            disabled={selectedDocs.length === 0 || !templateItemId || fillingDoc}
+            //disabled={selectedDocs.length === 0 || !templateItemId || fillingDoc}
             //disabled={!selectedDocs || !templateItemId || fillingDoc}
+            disabled={selectedDocs.length === 0 || fillingDoc}
           >
             {fillingDoc ? "Filling document..." : "Fill and download selected docs"}
           </Button>
