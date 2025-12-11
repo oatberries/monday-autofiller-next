@@ -21,7 +21,7 @@ const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"]
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
 
-function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
+function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = "output.docx") {
 
   const uint8 = new Uint8Array(ab);
   const zip = new PizZip(uint8);
@@ -58,7 +58,7 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }) {
     }
   );
 
-  saveAs(blob, "output.docx");
+  saveAs(blob, filename);
 
   return out;
 }
@@ -266,7 +266,7 @@ async function handleFillAndDownloadClick() {
       respondent: respondent || "",
       csp: csp || "",
       drNumber: drNumber || "",
-    });
+    }, docName);
 
   }
     //`fillTemplate` already calls `saveAs(blob, "output.docx")`,
