@@ -462,6 +462,20 @@ function toggleDocSelection(itemId, docName) {
   //Some example what you can do with context, read more here: https://developer.monday.com/apps/docs/mondayget#requesting-context-and-settings-data
   //const attentionBoxText = `Hello! Board ID: ${boardId ?? "loading"}, Item ID: ${itemId ?? "loading"}`;
 
+  // Build a preview-friendly structure: { "Order Name": ["Doc1.docx", "Doc2.docx", ...], ... }
+  const groupedSelectedDocs = selectedDocs.reduce((acc, { itemId, docName }) => {
+    const order = orderTypes.find((o) => o.id === itemId);
+    const orderLabel = order ? order.name : `Order ${itemId}`;
+
+    if (!acc[orderLabel]) {
+      acc[orderLabel] = [];
+    }
+    acc[orderLabel].push(docName);
+
+    return acc;
+  }, {});
+
+
   return (
     <div className="App" >
       <div className="scroll-container" style={{height: "100vh", overflowY: "auto", overflowX: "hidden"}}>
@@ -523,7 +537,6 @@ function toggleDocSelection(itemId, docName) {
 
 
     </div>
-  {/*    <AttentionBox title="Hello Monday Apps!" text={attentionBoxText} type="success" />  */}
 
       <div style={{ padding: 16 }}>
         {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
@@ -534,27 +547,31 @@ function toggleDocSelection(itemId, docName) {
         <p><strong>Respondent:</strong> {respondent || "—"}</p>
         <p><strong>CSP:</strong> {csp || "—"}</p>
         <p><strong>DR#:</strong> {drNumber || "—"}</p>
-{/*
-        <div style={{ marginTop: 24, marginBottom: 12 }}>
-          <Button onClick={handlePreviewClick} disabled={!itemId || loadingPreview}>
-            {loadingPreview ? "Loading preview..." : "Preview DOCX template"}
-          </Button>
-        </div>
-
-        <p><strong>Templates Board ID:</strong> {templateBoardId || "—"}</p>
-        <p><strong>Templates Group ID:</strong> {templateGroupId || "—"}</p>
-        <p><strong>Templates Item Name:</strong> {templateItemName || "—"}</p>
-        <p><strong>Templates Item ID:</strong> {templateItemId || "—"}</p>
-        <p><strong>DOCX Public URL:</strong> {publicUrl || "—"}</p>
-*/}
 
         </div>   
+
+
+        {selectedDocs.length > 0 && (
+          <div style={{ marginTop: 24, paddingInline: 16 }}>
+            <h3>Selected documents</h3>
+            <ul>
+              {Object.entries(groupedSelectedDocs).map(([orderLabel, docs]) => (
+                <li key={orderLabel}>
+                  <strong>{orderLabel}</strong>
+                  <ul>
+                    {docs.map((name) => (
+                      <li key={orderLabel + name}>{name}</li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div style={{ marginTop: 24 }}>
           <Button
             onClick={handleFillAndDownloadClick}
-            //disabled={selectedDocs.length === 0 || !templateItemId || fillingDoc}
-            //disabled={!selectedDocs || !templateItemId || fillingDoc}
             disabled={selectedDocs.length === 0 || fillingDoc}
           >
             {fillingDoc ? "Filling document..." : "Fill and download selected docs"}
