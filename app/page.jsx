@@ -112,7 +112,8 @@ export default function Page() {
   const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
   const [docNames, setDocNames] = useState([]);
-  const [selectedDoc, setSelectedDoc] = useState(null);
+  //const [selectedDoc, setSelectedDoc] = useState(null);
+  const [selectedDocs, setSelectedDocs] = useState([]);
   const [fillingDoc, setFillingDoc] = useState(false);
 
 
@@ -235,7 +236,7 @@ export default function Page() {
 }, [templateItemId]);
 
 async function handleFillAndDownloadClick() {
-  // Basic guard rails
+  
   if (!templateItemId || !selectedDoc) {
     setError("Please select an order type and a document first.");
     return;
@@ -269,6 +270,13 @@ async function handleFillAndDownloadClick() {
   }
 }
 
+function toggleDocSelection(docName) {
+  setSelectedDocs((prev) =>
+    prev.includes(docName)
+      ? prev.filter((d) => d !== docName) //uncheck
+      : [...prev, docName]               //check
+  );
+}
 
 /*
   useEffect(() =>{
@@ -440,8 +448,8 @@ async function handleFillAndDownloadClick() {
                     <Checkbox
                       key={doc}
                       label={doc}
-                      checked={selectedDoc === doc}
-                      onChange={() => setSelectedDoc(doc)}
+                      checked={selectedDocs.includes(doc)}
+                      onChange={() => toggleDocSelection(doc)}
                       ariaLabel={doc}
                     />
                   ))
@@ -486,9 +494,9 @@ async function handleFillAndDownloadClick() {
         <div style={{ marginTop: 24 }}>
           <Button
             onClick={handleFillAndDownloadClick}
-            disabled={!selectedDoc || !templateItemId || fillingDoc}
+            disabled={!selectedDocs || !templateItemId || fillingDoc}
           >
-            {fillingDoc ? "Filling document..." : "Fill and download selected doc"}
+            {fillingDoc ? "Filling document..." : "Fill and download selected docs"}
           </Button>
         </div>
 
