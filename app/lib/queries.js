@@ -78,7 +78,7 @@ query FileURL ($itemId: [ID!]) {
 
 
 export const ORDER_TYPES = `
-  query OrderTypes($boardIds: [Int], $groupIds: [String]) {
+  query OrderTypes($boardIds: [ID!], $groupIds: [String!]) {
     boards(ids: $boardIds) {
       groups(ids: $groupIds) {
         items_page {
