@@ -7,7 +7,7 @@ import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 //Explore more Monday React Components here: https://vibe.monday.com/
 import { AttentionBox, Button } from "@vibe/core";
-import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES, FILE_NAMES} from "./lib/queries";
+import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP} from "./lib/queries";
 import { runQuery } from "./lib/monday";
 import { Checkbox, Accordion, AccordionItem } from "@vibe/core";
 import { renderAsync } from "docx-preview";
@@ -135,6 +135,48 @@ export default function Page() {
     fetchContext();
     
   }, []);
+  
+  //this use effect is to give this app a lil speed boost by finding the template board and group id right from the start
+  useEffect(() => {
+  async function resolveTemplateBoardAndGroup() {
+    try {
+      const data = await runQuery(TEMPLATE_BOARD_AND_GROUP);
+      const boards = data?.boards ?? [];
+
+      //Find the board by name
+      const templateBoard = boards.find(
+        (b) =>
+          b.name &&
+          b.name.trim().toLowerCase() === TEMPLATE_BOARD_NAME.toLowerCase()
+      );
+
+      if (!templateBoard) {
+        console.error("Template board not found");
+        return;
+      }
+
+      //Inside that board, find the group by title
+      const templateGroup = (templateBoard.groups ?? []).find(
+        (g) =>
+          g.title &&
+          g.title.trim().toLowerCase() === ORDER_GROUP_TITLE.toLowerCase()
+      );
+
+      if (!templateGroup) {
+        console.error("Template group not found");
+        return;
+      }
+
+      setTemplateBoardId(Number(templateBoard.id));
+      setTemplateGroupId(templateGroup.id);
+    } catch (err) {
+      console.error("Error resolving template board/group:", err);
+      setError("Failed to resolve template board/group.");
+    }
+  }
+
+    resolveTemplateBoardAndGroup();
+  }, []);
 
   //KEEP: here we extract the values that we need to fill the template with
   useEffect(() => {
@@ -164,7 +206,34 @@ export default function Page() {
     })();
   }, [itemId]);
 
+  
   //New function: here we're gonna extract the names of each order type
+  useEffect(() => {
+  //Don’t query until we know both ids
+  if (!templateBoardId || !templateGroupId) return;
+
+  async function fetchOrderTypes() {
+    try {
+      const data = await runQuery(ORDER_TYPES, {
+        boardIds: [templateBoardId],
+        groupIds: [templateGroupId],
+      });
+
+      const boards = data?.boards ?? [];
+      const groups = boards[0]?.groups ?? [];
+      const group = groups[0];
+      const items = group?.items_page?.items ?? [];
+
+      setOrderTypes(items); //items already have { id, name }
+    } catch (err) {
+      console.error("Error fetching order types:", err);
+      setError("Failed to fetch order types.");
+    }
+  }
+
+  fetchOrderTypes();
+}, [templateBoardId, templateGroupId]);
+/*
   useEffect(() =>{
     async function fetchOrderTypes() {
       try{
@@ -193,15 +262,7 @@ export default function Page() {
         
         const items = templateGroup.items_page?.items ?? [];
         //orderTypes should now be an array of the names of the different orders
-
-        //const orders = items.map(item => item.name);
         const orders = items;
-        //orderTypes will be an array of objects with the itemId and item name
-        /*const orders = items.map(item => ({
-          id: item.id,
-          name: item.name,
-        }));
-        */
 
         setOrderTypes(orders);
 
@@ -211,7 +272,7 @@ export default function Page() {
     }
 
     fetchOrderTypes();
-  }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]);
+ }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]); */
 
   useEffect(() => {
   //if we don't have an item id yet, do nothing
@@ -239,16 +300,6 @@ export default function Page() {
         [templateItemId]: docs,
       }));
 
-/*
-      //Grab the asset names
-      const names = assets.map(a => a.name);
-
-      //setDocNames(names);
-      setDocNamesByItem(prev => ({
-        ...prev,
-        [templateItemId]: names,
-      }));
-*/
     } catch (err) {
       console.error("Error getting file names:", err);
     }
@@ -316,134 +367,6 @@ function toggleDocSelection(itemId, docName) {
 }
 
 
-/*
-  useEffect(() =>{
-
-    async function retrieveFileNames() {
-    
-    try{
-      const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
-
-      const items = data?.items;
-      const assets = items?.assets;
-
-      const assetNames = assets.map(assets => assets.names);
-
-      setDocNames(assetNames);
-
-    }
-    catch(err){
-      //console.error("Error getting file names:", err);
-    }
-
-  }
-
-  retrieveFileNames();
-  },);
-*/
-  //function handleOnClick(){
-    //setSelectedDoc(order);
-  //}
-/*
-  useEffect(() => {
-    async function fetchTemplateContext(){
-      try{
-        const data = await runQuery(BOARD_NAME);
-        const boards = data?.boards ?? [];
-
-        const templateBoard = boards.find(
-        (b) => b.name.trim().toLowerCase() === TEMPLATE_BOARD_NAME.toLowerCase()
-        );
-        
-        if(!templateBoard){
-          console.error("Template board not found!");
-        }
-        setTemplateBoardId(templateBoard.id);
-
-        const templateGroup = templateBoard.groups.find(
-          (g) => g.title.trim().toLowerCase() === ORDER_GROUP_TITLE.toLowerCase()
-        );
-        
-        if(!templateGroup){
-          console.error("Template group not found");
-        }
-        setTemplateGroupId(templateGroup.id);
-
-        const items = templateGroup.items_page?.items ?? [];
-        const templateItem = items.find(
-          (i) => i.name.trim().toLowerCase() === templateItemName.toLowerCase()
-        );
-
-        if(!templateItem){
-          console.error("Template item not found!");
-        }
-        setTemplateItemId(templateItem.id);
-
-      }catch(err){
-        console.error("Error getting template context:", err);
-      }
-    }
-
-    fetchTemplateContext();
-  }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE, templateItemName]);
-*/
-
-/*
-  async function getDocxPublicUrl(templateItemId) {
-    const data = await runQuery(FILE_URL, { itemId: [templateItemId] });
-    const assets = data?.items?.[0]?.assets || [];
-    const docx = assets.find(a => (a.file_extension || "").toLowerCase() === ".docx");
-    if (!docx?.public_url) {
-      throw new Error("No .docx with a public_url found on this item.");
-    }
-    setPublicUrl(docx.public_url);
-    return docx.public_url; // short-lived; fetch immediately via proxy
-  }
-
-  async function fetchArrayBufferViaProxy(publicUrl) {
-    const r = await fetch(`/api/file-proxy?u=${encodeURIComponent(publicUrl)}`);
-    if (!r.ok) throw new Error(`Proxy fetch failed: ${r.status}`);
-    return r.arrayBuffer();
-  }
-
-  //Click handler to preview the DOCX
-  async function handlePreviewClick() {
-    if (!itemId) return;
-    setLoadingPreview(true);
-    setError("");
-
-    try {
-      const publicUrl = await getDocxPublicUrl(templateItemId);
-      const ab = await fetchArrayBufferViaProxy(publicUrl);
-
-       //Fill the template with current item values
-      const filledAb = fillTemplate(ab, {
-        petitioner: petitioner || "",
-        respondent: respondent || "",
-        csp: csp || "",
-        drNumber: drNumber || "",
-      });
-
-      if (previewRef.current) {
-        previewRef.current.innerHTML = "";
-      }
-
-      //Preview the filled doc
-      await renderAsync(filledAb, previewRef.current, null, {
-        inWrapper: true,
-        ignoreFonts: true,
-      });
-    } catch (e) {
-      console.error(e);
-      setError(e.message || "Failed to preview document");
-    } finally {
-      setLoadingPreview(false);
-    }
-  }
-
-*/
-
-
   useEffect(() => {
     // Notice this method notifies the monday platform that user gains a first value in an app.
     // Read more about it here: https://developer.monday.com/apps/docs/mondayexecute#value-created-for-user/
@@ -466,123 +389,6 @@ function toggleDocSelection(itemId, docName) {
 
     return acc;
   }, {});
-
-    
-
- /* return (
-    <div className="App" >
-      <div className="scroll-container" style={{height: "100vh", overflowY: "auto", overflowX: "hidden"}}>
-        <div >
-
-
-      <Accordion id="orderTypeList" >
-        {orderTypes.map(order =>(
-          <AccordionItem
-            key={order.id}
-            title={order.name}
-            onClick={() => {
-            //set which order type is open
-            setOpenOrderType(order.id), 
-            //set the itemId whose docs we want to load
-            setTemplateItemId(order.id)
-            }} 
-          >
-            
-              {openOrderType === order.id && (
-              <div style={{ paddingLeft: 16, paddingTop: 8 }}>
-
-                
-                {(docNamesByItem[order.id] || []).length === 0 ? (
-                  <div>No documents attached to this order type.</div>
-                ) : (
-                  (docNamesByItem[order.id] || []).map(({ name: label, isDocx }) => (
-                    <div
-                      key={label}
-                      style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}
-                    >
-                      <Checkbox
-                        label={label}
-                        disabled={!isDocx}
-                        checked={
-                          isDocx &&
-                          selectedDocs.some(
-                            (d) => d.itemId === order.id && d.docName === label
-                          )
-                        }
-                        onChange={() => {
-                          if (isDocx) {
-                            toggleDocSelection(order.id, label);
-                          }
-                        }}
-                        ariaLabel={label}
-                      />
-
-                      {!isDocx && (
-                        <span style={{ fontSize: 12, color: "crimson" }}>
-                          ! This document must be .docx to be autofilled
-                        </span>
-                      )}
-                    </div>
-                  ))
-                )}
-
-
-
-              </div>
-            )}
-           
-          </AccordionItem>
-        ))}
-     
-      </Accordion>
-
-
-    </div>
-
-      <div style={{ padding: 16 }}>
-        {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
-        <h2>Current Item Fields</h2>
-        <p><strong>boardId:</strong> {boardId || "—"}</p>
-        <p><strong>itemId:</strong> {itemId || "—"}</p>
-        <p><strong>Petitioner:</strong> {petitioner || "—"}</p>
-        <p><strong>Respondent:</strong> {respondent || "—"}</p>
-        <p><strong>CSP:</strong> {csp || "—"}</p>
-        <p><strong>DR#:</strong> {drNumber || "—"}</p>
-
-        </div>   
-
-
-        {selectedDocs.length > 0 && (
-          <div style={{ marginTop: 24, paddingInline: 16 }}>
-            <h3>Selected documents</h3>
-            <ul>
-              {Object.entries(groupedSelectedDocs).map(([orderLabel, docs]) => (
-                <li key={orderLabel}>
-                  <strong>{orderLabel}</strong>
-                  <ul>
-                    {docs.map((name) => (
-                      <li key={orderLabel + name}>{name}</li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <div style={{ marginTop: 24 }}>
-          <Button
-            onClick={handleFillAndDownloadClick}
-            disabled={selectedDocs.length === 0 || fillingDoc}
-          >
-            {fillingDoc ? "Filling document..." : "Fill and download selected docs"}
-          </Button>
-        </div>
-
-      </div>
-    </div>
-    
-  );*/
 
   return (
     <div className="App tra-root">

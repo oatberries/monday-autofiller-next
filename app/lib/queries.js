@@ -78,21 +78,20 @@ query FileURL ($itemId: [ID!]) {
 
 
 export const ORDER_TYPES = `
-query OrderTypes{
-  boards{
-    name
-    groups{
-      title
-      items_page{
-        items{
-          id
-          name
+  query OrderTypes($boardIds: [Int], $groupIds: [String]) {
+    boards(ids: $boardIds) {
+      groups(ids: $groupIds) {
+        items_page {
+          items {
+            id
+            name
+          }
         }
       }
     }
   }
-}
 `;
+
 
 export const ORDER_TYPES2 = `
 query OrderTypes{
@@ -129,4 +128,17 @@ query FileURL ($itemId: [ID!]) {
   }
 }
 
+`;
+
+export const TEMPLATE_BOARD_AND_GROUP = `
+  query TemplateBoardAndGroup {
+    boards(limit: 25) {
+      id
+      name
+      groups {
+        id
+        title
+      }
+    }
+  }
 `;
