@@ -211,6 +211,8 @@ export default function Page() {
   //Don’t query until we know both ids
   if (!templateBoardId || !templateGroupId) return;
 
+  let cancelled = false;
+
   async function fetchOrderTypes() {
     try {
 
@@ -256,7 +258,7 @@ export default function Page() {
   return () => {
     cancelled = true;
   };
-  
+
 }, [templateBoardId, templateGroupId]);
 
 
