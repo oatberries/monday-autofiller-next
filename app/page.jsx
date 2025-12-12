@@ -15,11 +15,12 @@ import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
 
-// Usage of mondaySDK example, for more information visit here: https://developer.monday.com/apps/docs/introduction-to-the-sdk/
 const monday = mondaySdk();
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
+const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
+
 
 function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = "output.docx") {
 
@@ -106,9 +107,7 @@ export default function Page() {
   const [templateGroupId, setTemplateGroupId] = useState(null);
   const [templateItemName, setTemplateItemName] = useState(null);
   const [templateItemId, setTemplateItemId] = useState(null);
-  //const [orderTypes, setOrderTypes] = useState([{orderTypes: ''}]);
   const [orderTypes, setOrderTypes] = useState([]);
-  const [orderId, setOrderId] = useState(null);
   const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
   //const [docNames, setDocNames] = useState([]);
@@ -214,6 +213,15 @@ export default function Page() {
 
   async function fetchOrderTypes() {
     try {
+
+      const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
+
+      if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
+        setOrderTypes(cached.data.orders);
+        return;
+      }
+
+
       const data = await runQuery(ORDER_TYPES, {
         boardIds: [templateBoardId],
         groupIds: [templateGroupId],
@@ -224,55 +232,33 @@ export default function Page() {
       const group = groups[0];
       const items = group?.items_page?.items ?? [];
 
-      setOrderTypes(items); //items already have { id, name }
+      if (!cancelled) {
+        setOrderTypes(items);
+
+        await monday.storage.instance.setItem(ORDER_TYPES_CACHE_KEY, {
+          orders: items,
+        });
+      }
+      //setOrderTypes(items); //items already have { id, name }
+
+      
     } catch (err) {
-      console.error("Error fetching order types:", err);
-      setError("Failed to fetch order types.");
+      if (!cancelled) {
+        console.error("Error fetching order types:", err);
+        setError("Failed to fetch order types.");
+      }
+      //console.error("Error fetching order types:", err);
+      //setError("Failed to fetch order types.");
     }
   }
 
   fetchOrderTypes();
+  return () => {
+    cancelled = true;
+  };
+  
 }, [templateBoardId, templateGroupId]);
-/*
-  useEffect(() =>{
-    async function fetchOrderTypes() {
-      try{
-        const data = await runQuery(ORDER_TYPES);
-        console.log(data);
 
-        const boards = data.boards;
-
-        const templateBoard = boards.find(
-        (b) => b.name.trim().toLowerCase() === TEMPLATE_BOARD_NAME.toLowerCase()
-        );
-
-        if(!templateBoard){
-          console.error("Template board not found!");
-        }
-        //setTemplateBoardId(templateBoard.id);
-
-        const templateGroup = templateBoard.groups.find(
-          (g) => g.title.trim().toLowerCase() === ORDER_GROUP_TITLE.toLowerCase()
-        );
-        
-        if(!templateGroup){
-          console.error("Template group not found");
-        }
-        //setTemplateGroupId(templateGroup.id);
-        
-        const items = templateGroup.items_page?.items ?? [];
-        //orderTypes should now be an array of the names of the different orders
-        const orders = items;
-
-        setOrderTypes(orders);
-
-      } catch(err){
-        console.error("Error getting context:", err);
-      }
-    }
-
-    fetchOrderTypes();
- }, [TEMPLATE_BOARD_NAME, ORDER_GROUP_TITLE]); */
 
   useEffect(() => {
   //if we don't have an item id yet, do nothing
