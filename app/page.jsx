@@ -20,6 +20,7 @@ const ORDER_GROUP_TITLE = "Orders";
 const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
 
 
+
 function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = "output.docx") {
 
   const uint8 = new Uint8Array(ab);
@@ -209,14 +210,16 @@ export default function Page() {
   async function fetchOrderTypes() {
     try {
 
-      const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
+      //const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
+      const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
 
       if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
+        console.log("[TRA] Using cached order types");
         setOrderTypes(cached.data.orders);
         return;
       }
 
-
+      console.log("[TRA] Fetching order types via GraphQL");
       const data = await runQuery(ORDER_TYPES, {
         boardIds: [templateBoardId],
         groupIds: [templateGroupId],
@@ -230,20 +233,20 @@ export default function Page() {
       if (!cancelled) {
         setOrderTypes(items);
 
-        await monday.storage.instance.setItem(ORDER_TYPES_CACHE_KEY, {
+        /*await monday.storage.instance.setItem(ORDER_TYPES_CACHE_KEY, {
           orders: items,
-        });
+        });*/
       }
-      //setOrderTypes(items); //items already have { id, name }
-
+      await monday.storage.setItem(ORDER_TYPES_CACHE_KEY, {
+        orders: items,
+      });
       
     } catch (err) {
       if (!cancelled) {
         console.error("Error fetching order types:", err);
         setError("Failed to fetch order types.");
       }
-      //console.error("Error fetching order types:", err);
-      //setError("Failed to fetch order types.");
+      
     }
   }
 
