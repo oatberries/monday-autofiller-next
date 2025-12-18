@@ -5,12 +5,10 @@ import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
-//Explore more Monday React Components here: https://vibe.monday.com/
 import { AttentionBox, Button } from "@vibe/core";
-import { ITEM_NAME_AND_VALUES, BOARD_NAME,FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP} from "./lib/queries";
+import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP} from "./lib/queries";
 import { runQuery } from "./lib/monday";
 import { Checkbox, Accordion, AccordionItem } from "@vibe/core";
-import { renderAsync } from "docx-preview";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
@@ -47,7 +45,6 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = 
     throw new Error("Failed to render template");
   }
 
-  //Return a new ArrayBuffer representing the filled DOCX
   const out = doc.getZip().generate({
     type: "arraybuffer",
   });
@@ -81,7 +78,6 @@ async function getSelectedDocPublicUrl(templateItemId, docName) {
 }
 
 async function fetchArrayBufferViaProxy(publicUrl) {
-  // Your existing API route that bypasses CORS & auth issues
   const r = await fetch(`/api/file-proxy?u=${encodeURIComponent(publicUrl)}`);
   if (!r.ok) throw new Error(`Proxy fetch failed: ${r.status}`);
   return r.arrayBuffer();
@@ -99,10 +95,8 @@ export default function Page() {
   const [csp, setCsp] = useState(null);
   const [drNumber, setDRNumber] = useState(null);
 
-  const[publicUrl, setPublicUrl] = useState(null);
+  //const[publicUrl, setPublicUrl] = useState(null);
   const [error, setError] = useState("");
-  const [loadingPreview, setLoadingPreview] = useState(false);
-  const previewRef = useRef(null); // container for the preview
   const [templateBoardId, setTemplateBoardId] = useState(null);
   const [templateGroupId, setTemplateGroupId] = useState(null);
   const [templateItemName, setTemplateItemName] = useState(null);
@@ -110,16 +104,15 @@ export default function Page() {
   const [orderTypes, setOrderTypes] = useState([]);
   const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
-  //const [docNames, setDocNames] = useState([]);
   const [docNamesByItem, setDocNamesByItem] = useState({});
-  //const [selectedDoc, setSelectedDoc] = useState(null);
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [fillingDoc, setFillingDoc] = useState(false);
 
 
 
 
-  // KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number
+  //KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number
+  //this happens instantly
   useEffect(() => {
     async function fetchContext() {
       try {
@@ -356,14 +349,7 @@ function toggleDocSelection(itemId, docName) {
 
 
   useEffect(() => {
-    // Notice this method notifies the monday platform that user gains a first value in an app.
-    // Read more about it here: https://developer.monday.com/apps/docs/mondayexecute#value-created-for-user/
     monday.execute("valueCreatedForUser");
-
-    // TODO: set up event listeners, Here`s an example, read more here: https://developer.monday.com/apps/docs/mondaylisten/
-    monday.listen("context", (res) => {
-      setContext(res.data);
-    });
   }, []);
 
     const groupedSelectedDocs = selectedDocs.reduce((acc, { itemId, docName }) => {
