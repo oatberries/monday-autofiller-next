@@ -203,10 +203,7 @@ export default function Page() {
 
   }, [itemId]);
 
-  
-  //New function: here we're gonna extract the names of each order type
   useEffect(() => {
-  //Don’t query until we know both ids
   if (!templateBoardId || !templateGroupId) return;
 
   let cancelled = false;
@@ -214,23 +211,40 @@ export default function Page() {
   async function fetchOrderTypes() {
     try {
       console.time("storage:get ORDER_TYPES");
-      //const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
       console.timeEnd("storage:get ORDER_TYPES");
 
-      if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
+      console.log(
+        "[TRA] Cached order types (raw):",
+        cached
+      );
+
+      console.log(
+        "[TRA] Cached order types (value):",
+        JSON.stringify(cached?.data?.value, null, 2)
+      );
+
+     /* if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
         console.log("[TRA] Using cached order types");
         setOrderTypes(cached.data.orders);
         return;
       }
+    */
+       if (!cancelled && cached?.data?.value?.orders && Array.isArray(cached.data.value.orders)) {
+        console.log("[TRA] Using cached order types");
+        setOrderTypes(cached.data.value.orders);
+        return;
+      }
+      
 
-      console.log("[TRA] Fetching order types via GraphQL");
+      console.log("[TRA] Cache empty -> Fetching order types via GraphQL");
       console.time("FETCH ORDER TYPES");
       const data = await runQuery(ORDER_TYPES, {
         boardIds: [templateBoardId],
         groupIds: [templateGroupId],
       });
       console.timeEnd("FETCH ORDER TYPES");
+
       const boards = data?.boards ?? [];
       const groups = boards[0]?.groups ?? [];
       const group = groups[0];
@@ -238,14 +252,15 @@ export default function Page() {
 
       if (!cancelled) {
         setOrderTypes(items);
-
-        /*await monday.storage.instance.setItem(ORDER_TYPES_CACHE_KEY, {
-          orders: items,
-        });*/
       }
-      await monday.storage.setItem(ORDER_TYPES_CACHE_KEY, {
+
+      console.log("[TRA] Saving order types to storage:", items);
+
+      const writeResult= await monday.storage.setItem(ORDER_TYPES_CACHE_KEY, {
         orders: items,
       });
+
+      console.log("[TRA] Write result:", writeResult);
       
     } catch (err) {
       if (!cancelled) {
