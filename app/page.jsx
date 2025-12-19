@@ -120,6 +120,7 @@ export default function Page() {
       try {
         console.time("OPEN CASES BOARD ID AND ITEM ID");
         const { data } = await monday.get("context"); 
+        console.timeEnd("OPEN CASES BOARD ID AND ITEM ID END");
         setBoardId(data.boardId);
         setItemId(data.itemId);
       } catch (err) {
@@ -128,8 +129,6 @@ export default function Page() {
     }
 
     fetchContext();
-    console.timeEnd("OPEN CASES BOARD ID AND ITEM ID END");
-    
   }, []);
   
   //this use effect is to give this app a lil speed boost by finding the template board and group id right from the start
@@ -138,6 +137,8 @@ export default function Page() {
     try {
       console.time("START: CACHED TEMPLATE BOARD AND GROUP");
       const data = await runQuery(TEMPLATE_BOARD_AND_GROUP);
+      console.timeEnd("END: TEMPLATE BOARD AND GROUP");
+
       const boards = data?.boards ?? [];
 
       //Find the board by name
@@ -173,7 +174,7 @@ export default function Page() {
   }
 
     resolveTemplateBoardAndGroup();
-    console.timeEnd("END: TEMPLATE BOARD AND GROUP");
+    
   }, []);
 
   //KEEP: here we extract the values that we need to fill the template with
@@ -184,6 +185,8 @@ export default function Page() {
       try {
         console.time("START: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
         const data = await runQuery(ITEM_NAME_AND_VALUES, { itemId: [itemId] });
+        console.timeEnd("END: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
+
         const item = data?.items?.[0];
         const cvs = item?.column_values ?? [];
 
@@ -204,7 +207,6 @@ export default function Page() {
       }
     })();
 
-    console.timeEnd("END: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
   }, [itemId]);
 
   
@@ -217,9 +219,10 @@ export default function Page() {
 
   async function fetchOrderTypes() {
     try {
-      console.time("START: FETCH ORDER TYPES");
+      console.time("START: storage:get ORDER_TYPES");
       //const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
+      console.timeEnd("END: storage:get ORDER_TYPES");
 
       if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
         console.log("[TRA] Using cached order types");
@@ -228,11 +231,12 @@ export default function Page() {
       }
 
       console.log("[TRA] Fetching order types via GraphQL");
+      console.time("START: FETCH ORDER TYPES");
       const data = await runQuery(ORDER_TYPES, {
         boardIds: [templateBoardId],
         groupIds: [templateGroupId],
       });
-
+      console.timeEnd("END: FETCH ORDER TYPES");
       const boards = data?.boards ?? [];
       const groups = boards[0]?.groups ?? [];
       const group = groups[0];
@@ -259,7 +263,6 @@ export default function Page() {
   }
 
   fetchOrderTypes();
-  console.timeEnd("END: FETCH ORDER TYPES");
 
   return () => {
     cancelled = true;
