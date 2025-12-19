@@ -96,24 +96,18 @@ export default function Page() {
   const [csp, setCsp] = useState(null);
   const [drNumber, setDRNumber] = useState(null);
 
-  //const[publicUrl, setPublicUrl] = useState(null);
   const [error, setError] = useState("");
   const [templateBoardId, setTemplateBoardId] = useState(null);
   const [templateGroupId, setTemplateGroupId] = useState(null);
   const [templateItemName, setTemplateItemName] = useState(null);
   const [templateItemId, setTemplateItemId] = useState(null);
   const [orderTypes, setOrderTypes] = useState([]);
-  const [document, setDocuments] = useState([{documents: ''}]);
+  //const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
   const [docNamesByItem, setDocNamesByItem] = useState({});
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [fillingDoc, setFillingDoc] = useState(false);
 
-
-
-
-  //KEEP: this fetches the boardId for the board that we need the petitioner, respondent, csp, and dr number
-  //this happens instantly
   useEffect(() => {
     async function fetchContext() {
 
@@ -382,6 +376,28 @@ function toggleDocSelection(itemId, docName) {
 
     return acc;
   }, {});
+
+  useEffect(() => {
+  //Simple storage sanity check
+  (async () => {
+    console.log("[TRA] Running storage smoke test…");
+
+    try {
+      const readBefore = await monday.storage.getItem("tra_debug_test");
+      console.log("[TRA] Before set, tra_debug_test =", readBefore);
+
+      await monday.storage.setItem("tra_debug_test", {
+        savedAt: new Date().toISOString(),
+      });
+
+      const readAfter = await monday.storage.getItem("tra_debug_test");
+      console.log("[TRA] After set, tra_debug_test =", readAfter);
+    } catch (err) {
+      console.error("[TRA] Storage smoke test ERROR:", err);
+    }
+  })();
+}, []);
+
 
   return (
     <div className="App tra-root">
