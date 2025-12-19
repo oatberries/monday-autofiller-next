@@ -116,7 +116,9 @@ export default function Page() {
   //this happens instantly
   useEffect(() => {
     async function fetchContext() {
+
       try {
+        console.time("OPEN CASES BOARD ID AND ITEM ID");
         const { data } = await monday.get("context"); 
         setBoardId(data.boardId);
         setItemId(data.itemId);
@@ -126,6 +128,7 @@ export default function Page() {
     }
 
     fetchContext();
+    console.timeEnd("OPEN CASES BOARD ID AND ITEM ID END");
     
   }, []);
   
@@ -133,6 +136,7 @@ export default function Page() {
   useEffect(() => {
   async function resolveTemplateBoardAndGroup() {
     try {
+      console.time("START: CACHED TEMPLATE BOARD AND GROUP");
       const data = await runQuery(TEMPLATE_BOARD_AND_GROUP);
       const boards = data?.boards ?? [];
 
@@ -169,6 +173,7 @@ export default function Page() {
   }
 
     resolveTemplateBoardAndGroup();
+    console.timeEnd("END: TEMPLATE BOARD AND GROUP");
   }, []);
 
   //KEEP: here we extract the values that we need to fill the template with
@@ -177,6 +182,7 @@ export default function Page() {
 
     (async () => {
       try {
+        console.time("START: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
         const data = await runQuery(ITEM_NAME_AND_VALUES, { itemId: [itemId] });
         const item = data?.items?.[0];
         const cvs = item?.column_values ?? [];
@@ -197,6 +203,8 @@ export default function Page() {
         console.error(e);
       }
     })();
+
+    console.timeEnd("END: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
   }, [itemId]);
 
   
@@ -209,7 +217,7 @@ export default function Page() {
 
   async function fetchOrderTypes() {
     try {
-
+      console.time("START: FETCH ORDER TYPES");
       //const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
 
@@ -251,6 +259,8 @@ export default function Page() {
   }
 
   fetchOrderTypes();
+  console.timeEnd("END: FETCH ORDER TYPES");
+
   return () => {
     cancelled = true;
   };
@@ -266,6 +276,8 @@ export default function Page() {
 
   async function fetchFileNames() {
     try {
+
+      console.time("START: FETCH FILE NAMES");
       const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
       //data.items is an array; we want the first item's assets
@@ -290,6 +302,7 @@ export default function Page() {
   }
 
   fetchFileNames();
+  console.timeEnd("END: FETCH FILE NAMES");
 }, [templateItemId]);
 
 async function handleFillAndDownloadClick() {
