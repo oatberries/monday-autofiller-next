@@ -120,7 +120,7 @@ export default function Page() {
       try {
         console.time("OPEN CASES BOARD ID AND ITEM ID");
         const { data } = await monday.get("context"); 
-        console.timeEnd("OPEN CASES BOARD ID AND ITEM ID END");
+        console.timeEnd("OPEN CASES BOARD ID AND ITEM ID");
         setBoardId(data.boardId);
         setItemId(data.itemId);
       } catch (err) {
@@ -135,9 +135,9 @@ export default function Page() {
   useEffect(() => {
   async function resolveTemplateBoardAndGroup() {
     try {
-      console.time("START: CACHED TEMPLATE BOARD AND GROUP");
+      console.time("CACHED TEMPLATE BOARD AND GROUP");
       const data = await runQuery(TEMPLATE_BOARD_AND_GROUP);
-      console.timeEnd("END: TEMPLATE BOARD AND GROUP");
+      console.timeEnd("CACHED TEMPLATE BOARD AND GROUP");
 
       const boards = data?.boards ?? [];
 
@@ -183,9 +183,9 @@ export default function Page() {
 
     (async () => {
       try {
-        console.time("START: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
+        console.time("SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
         const data = await runQuery(ITEM_NAME_AND_VALUES, { itemId: [itemId] });
-        console.timeEnd("END: SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
+        console.timeEnd("SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
 
         const item = data?.items?.[0];
         const cvs = item?.column_values ?? [];
@@ -219,10 +219,10 @@ export default function Page() {
 
   async function fetchOrderTypes() {
     try {
-      console.time("START: storage:get ORDER_TYPES");
+      console.time("storage:get ORDER_TYPES");
       //const cached = await monday.storage.instance.getItem(ORDER_TYPES_CACHE_KEY);
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
-      console.timeEnd("END: storage:get ORDER_TYPES");
+      console.timeEnd("storage:get ORDER_TYPES");
 
       if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
         console.log("[TRA] Using cached order types");
@@ -231,12 +231,12 @@ export default function Page() {
       }
 
       console.log("[TRA] Fetching order types via GraphQL");
-      console.time("START: FETCH ORDER TYPES");
+      console.time("FETCH ORDER TYPES");
       const data = await runQuery(ORDER_TYPES, {
         boardIds: [templateBoardId],
         groupIds: [templateGroupId],
       });
-      console.timeEnd("END: FETCH ORDER TYPES");
+      console.timeEnd("FETCH ORDER TYPES");
       const boards = data?.boards ?? [];
       const groups = boards[0]?.groups ?? [];
       const group = groups[0];
