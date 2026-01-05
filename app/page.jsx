@@ -75,7 +75,7 @@ async function getSelectedDocPublicUrl(templateItemId, docName) {
     throw new Error("No file with a public URL found for the selected document.");
   }
 
-  return asset.public_url; //short-lived; we’ll fetch it immediately via proxy
+  return asset.public_url;
 }
 
 async function fetchArrayBufferViaProxy(publicUrl) {
@@ -87,7 +87,7 @@ async function fetchArrayBufferViaProxy(publicUrl) {
 
 export default function Page() {
   
-  const [context, setContext] = useState();
+  //const [context, setContext] = useState();
   const [boardId, setBoardId] = useState(null);
   const [itemId, setItemId] = useState(null);
 
@@ -99,10 +99,8 @@ export default function Page() {
   const [error, setError] = useState("");
   const [templateBoardId, setTemplateBoardId] = useState(null);
   const [templateGroupId, setTemplateGroupId] = useState(null);
-  const [templateItemName, setTemplateItemName] = useState(null);
   const [templateItemId, setTemplateItemId] = useState(null);
   const [orderTypes, setOrderTypes] = useState([]);
-  //const [document, setDocuments] = useState([{documents: ''}]);
   const [openOrderType, setOpenOrderType] = useState(null);
   const [docNamesByItem, setDocNamesByItem] = useState({});
   const [selectedDocs, setSelectedDocs] = useState([]);
@@ -135,7 +133,6 @@ export default function Page() {
 
       const boards = data?.boards ?? [];
 
-      //Find the board by name
       const templateBoard = boards.find(
         (b) =>
           b.name &&
@@ -147,7 +144,6 @@ export default function Page() {
         return;
       }
 
-      //Inside that board, find the group by title
       const templateGroup = (templateBoard.groups ?? []).find(
         (g) =>
           g.title &&
@@ -171,7 +167,6 @@ export default function Page() {
     
   }, []);
 
-  //KEEP: here we extract the values that we need to fill the template with
   useEffect(() => {
     if (!itemId) return;
 
@@ -184,7 +179,6 @@ export default function Page() {
         const item = data?.items?.[0];
         const cvs = item?.column_values ?? [];
 
-        //Keep only CSP, DR#, Respondent, and Petitioner
         const wanted = cvs.filter(cv => WANTED_TITLES.includes(cv?.column?.title));
         const byTitle = Object.fromEntries(
           wanted.map(cv => [cv.column.title, cv.text ?? ""])
@@ -224,18 +218,10 @@ export default function Page() {
         JSON.stringify(cached?.data?.value, null, 2)
       );
 
-     /* if (!cancelled && cached?.data?.orders && Array.isArray(cached.data.orders)) {
-        console.log("[TRA] Using cached order types");
+      if (!cancelled && Array.isArray(cached?.data?.orders)) {
         setOrderTypes(cached.data.orders);
         return;
       }
-    */
-       if (!cancelled && cached?.data?.value?.orders && Array.isArray(cached.data.value.orders)) {
-        console.log("[TRA] Using cached order types");
-        setOrderTypes(cached.data.value.orders);
-        return;
-      }
-      
 
       console.log("[TRA] Cache empty -> Fetching order types via GraphQL");
       console.time("FETCH ORDER TYPES");
@@ -281,10 +267,7 @@ export default function Page() {
 
 
   useEffect(() => {
-  //if we don't have an item id yet, do nothing
   if (!templateItemId) return;
-
-  //if (docNamesByItem[templateItemId]) return;
 
   async function fetchFileNames() {
     try {
@@ -292,12 +275,10 @@ export default function Page() {
       console.time("START: FETCH FILE NAMES");
       const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
-      //data.items is an array; we want the first item's assets
       const assets = data?.items?.[0]?.assets ?? [];
 
       const docs = assets.map(a => ({
         name: a.name,
-        //try file_extension first, fall back to checking the name
         isDocx:
           (a.file_extension && a.file_extension.toLowerCase() === "docx") ||
           a.name.toLowerCase().endsWith(".docx"),
@@ -329,16 +310,12 @@ async function handleFillAndDownloadClick() {
 
   try {
 
-    //for (const docName of selectedDocs) {
     for (const { itemId: templateItemId, docName } of selectedDocs) {
 
-    //Get the public URL for the asset matching `selectedDoc`
     const publicUrl = await getSelectedDocPublicUrl(templateItemId, docName);
 
-    //Download the DOCX bytes through your proxy
     const ab = await fetchArrayBufferViaProxy(publicUrl);
 
-    //Fill the template with the current item’s values
     await fillTemplate(ab, {
       petitioner: petitioner || "",
       respondent: respondent || "",
@@ -347,8 +324,6 @@ async function handleFillAndDownloadClick() {
     }, docName);
 
   }
-    //`fillTemplate` already calls `saveAs(blob, "output.docx")`,
-    //so the user will get a download automatically here.
   } catch (e) {
     console.error(e);
     setError(e.message || "Failed to fill and download documents.");
@@ -393,7 +368,6 @@ function toggleDocSelection(itemId, docName) {
   }, {});
 
   useEffect(() => {
-  //Simple storage sanity check
   (async () => {
     console.log("[TRA] Running storage smoke test…");
 
