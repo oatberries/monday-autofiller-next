@@ -5,10 +5,9 @@ import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
-import { AttentionBox, Button } from "@vibe/core";
 import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP} from "./lib/queries";
 import { runQuery } from "./lib/monday";
-import { Checkbox, Accordion, AccordionItem } from "@vibe/core";
+import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton } from "@vibe/core";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
@@ -105,6 +104,8 @@ export default function Page() {
   const [docNamesByItem, setDocNamesByItem] = useState({});
   const [selectedDocs, setSelectedDocs] = useState([]);
   const [fillingDoc, setFillingDoc] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchContext() {
@@ -204,6 +205,9 @@ export default function Page() {
 
   async function fetchOrderTypes() {
     try {
+      
+      setLoading(true);
+
       console.time("storage:get ORDER_TYPES");
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
       console.timeEnd("storage:get ORDER_TYPES");
@@ -239,6 +243,8 @@ export default function Page() {
       if (!cancelled) {
         setOrderTypes(items);
       }
+
+      setLoading(false);
 
       console.log("[TRA] Saving order types to storage:", items);
 
@@ -410,6 +416,9 @@ function toggleDocSelection(itemId, docName) {
 
             <div className="tra-card tra-card--scroll">
               <Accordion id="orderTypeList">
+                <div>
+                  <Loader id="loader-with-background" size="medium" hasBackground />
+                </div>
                 {orderTypes.map((order) => (
                   <AccordionItem
                     key={order.id}
