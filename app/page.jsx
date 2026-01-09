@@ -416,9 +416,27 @@ function toggleDocSelection(itemId, docName) {
 
             <div className="tra-card tra-card--scroll">
               {loading && (
-                <div align-items= "center">
-                  <Loader id="loader-with-background" size="large" hasBackground />
-                </div>) 
+                <Flex
+                  direction="column"
+                  gap="small"
+                >
+                  <Skeleton
+                    id="overview-skeleton-1"
+                    size="h1"
+                    type="text"
+                  />
+                  <Skeleton
+                    id="overview-skeleton-2"
+                    size="h1"
+                    type="text"
+                  />
+                  <Skeleton
+                    id="overview-skeleton-3"
+                    size="h1"
+                    type="text"
+                  />
+                </Flex>
+                ) 
               }
               <Accordion id="orderTypeList">
                 {orderTypes.map((order) => (
