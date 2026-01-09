@@ -416,9 +416,11 @@ function toggleDocSelection(itemId, docName) {
 
             <div className="tra-card tra-card--scroll">
               <Accordion id="orderTypeList">
+                {loading && (
                 <div>
                   <Loader id="loader-with-background" size="medium" hasBackground />
-                </div>
+                </div>) 
+                }
                 {orderTypes.map((order) => (
                   <AccordionItem
                     key={order.id}
