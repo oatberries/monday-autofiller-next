@@ -416,10 +416,8 @@ function toggleDocSelection(itemId, docName) {
 
             <div className="tra-card tra-card--scroll">
               {loading && (
-                <Flex
-                  direction="column"
-                  gap="small"
-                >
+                <div>
+        
                   <Skeleton
                     id="overview-skeleton-1"
                     size="h1"
@@ -435,7 +433,8 @@ function toggleDocSelection(itemId, docName) {
                     size="h1"
                     type="text"
                   />
-                </Flex>
+                
+                </div>
                 ) 
               }
               <Accordion id="orderTypeList">
