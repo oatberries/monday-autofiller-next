@@ -7,7 +7,7 @@ import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP} from "./lib/queries";
 import { runQuery } from "./lib/monday";
-import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton } from "@vibe/core";
+import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton, Flex } from "@vibe/core";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
@@ -417,7 +417,10 @@ function toggleDocSelection(itemId, docName) {
             <div className="tra-card tra-card--scroll">
               {loading && (
                 <div>
-        
+                <Flex
+                  direction="column"
+                  gap="small"
+                >
                   <Skeleton
                     id="overview-skeleton-1"
                     size="h1"
@@ -433,7 +436,7 @@ function toggleDocSelection(itemId, docName) {
                     size="h1"
                     type="text"
                   />
-                
+                </Flex>
                 </div>
                 ) 
               }
