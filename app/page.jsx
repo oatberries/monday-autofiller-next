@@ -161,7 +161,7 @@ export default function Page() {
       setTemplateBoardId(Number(templateBoard.id));
       setTemplateGroupId(templateGroup.id);
     } catch (err) {
-      console.error("Error resolving template board/group:", err);
+      console.error("[TemplateBoardAndGroup] failed:", err);
       setError("Failed to resolve template board/group.");
     }
   }
