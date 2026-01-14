@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.6.1",
     "@vibe/core": "^3.76.0",
     "docx-preview": "^0.3.7",
     "docxtemplater": "^3.67.4",

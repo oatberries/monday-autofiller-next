@@ -11,6 +11,7 @@ import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skele
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
+import { Analytics } from "@vercel/analytics/next"
 
 const monday = mondaySdk();
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
@@ -373,6 +374,7 @@ function toggleDocSelection(itemId, docName) {
     return acc;
   }, {});
 
+  /*
   useEffect(() => {
   (async () => {
     console.log("[TRA] Running storage smoke test…");
@@ -392,7 +394,7 @@ function toggleDocSelection(itemId, docName) {
     }
   })();
 }, []);
-
+*/
 
   return (
     <div className="App tra-root">
