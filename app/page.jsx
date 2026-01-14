@@ -246,7 +246,7 @@ export default function Page() {
         setOrderTypes(items);
       }
 
-      //setLoading(false);
+      setLoading(false);
 
       console.log("[TRA] Saving order types to storage:", items);
 
@@ -262,7 +262,7 @@ export default function Page() {
         setError("Failed to fetch order types.");
       }
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
   }
 
