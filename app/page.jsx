@@ -104,9 +104,9 @@ export default function Page() {
   const [openOrderType, setOpenOrderType] = useState(null);
   const [docNamesByItem, setDocNamesByItem] = useState({});
   const [selectedDocs, setSelectedDocs] = useState([]);
-  const [fillingDoc, setFillingDoc] = useState(true);
+  const [fillingDoc, setFillingDoc] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchContext() {
@@ -208,7 +208,7 @@ export default function Page() {
   async function fetchOrderTypes() {
     try {
       
-      setLoading(true);
+      //setLoading(true);
 
       console.time("storage:get ORDER_TYPES");
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
@@ -246,7 +246,7 @@ export default function Page() {
         setOrderTypes(items);
       }
 
-      setLoading(false);
+      //setLoading(false);
 
       console.log("[TRA] Saving order types to storage:", items);
 
@@ -261,7 +261,8 @@ export default function Page() {
         console.error("Error fetching order types:", err);
         setError("Failed to fetch order types.");
       }
-      
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -314,7 +315,7 @@ async function handleFillAndDownloadClick() {
   }
 
   setError("");
-  //setFillingDoc(true);
+  setFillingDoc(true);
 
   try {
 
