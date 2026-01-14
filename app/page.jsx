@@ -104,7 +104,7 @@ export default function Page() {
   const [openOrderType, setOpenOrderType] = useState(null);
   const [docNamesByItem, setDocNamesByItem] = useState({});
   const [selectedDocs, setSelectedDocs] = useState([]);
-  const [fillingDoc, setFillingDoc] = useState(false);
+  const [fillingDoc, setFillingDoc] = useState(true);
 
   const [loading, setLoading] = useState(false);
 
@@ -314,7 +314,7 @@ async function handleFillAndDownloadClick() {
   }
 
   setError("");
-  setFillingDoc(true);
+  //setFillingDoc(true);
 
   try {
 
