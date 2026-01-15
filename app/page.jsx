@@ -207,8 +207,6 @@ export default function Page() {
 
   async function fetchOrderTypes() {
     try {
-      
-      //setLoading(true);
 
       console.time("storage:get ORDER_TYPES");
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
@@ -261,8 +259,6 @@ export default function Page() {
         console.error("Error fetching order types:", err);
         setError("Failed to fetch order types.");
       }
-    } finally {
-      //setLoading(false);
     }
   }
 
@@ -419,7 +415,7 @@ function toggleDocSelection(itemId, docName) {
             <h2 className="tra-section-title">Order types</h2>
 
             <div className="tra-card tra-card--scroll">
-              {loading && (
+              {loading ? (
                 <div>
                 <Flex
                   direction="column"
@@ -442,8 +438,8 @@ function toggleDocSelection(itemId, docName) {
                   />
                 </Flex>
                 </div>
-                ) 
-              }
+                ) : (
+              
               <Accordion id="orderTypeList">
                 {orderTypes.map((order) => (
                   <AccordionItem
@@ -496,6 +492,7 @@ function toggleDocSelection(itemId, docName) {
                   </AccordionItem>
                 ))}
               </Accordion>
+              )}
             </div>
           </section>
 
