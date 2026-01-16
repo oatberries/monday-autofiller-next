@@ -71,6 +71,13 @@
 
 /* Cards */
 
+.accordion-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
 .tra-card {
   background: #ffffff;
   border-radius: 8px;

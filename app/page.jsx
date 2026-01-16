@@ -416,7 +416,7 @@ function toggleDocSelection(itemId, docName) {
 
             <div className="tra-card tra-card--scroll">
               {loading ? (
-                <div>
+                <div className="accordion-skeleton">
                 <Flex
                   direction="column"
                   gap="small"
