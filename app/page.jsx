@@ -420,6 +420,7 @@ function toggleDocSelection(itemId, docName) {
                 <Flex
                   direction="column"
                   gap="small"
+                  width="100%"
                 >
                   <Skeleton
                     id="overview-skeleton-1"
