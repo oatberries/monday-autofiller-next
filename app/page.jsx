@@ -416,26 +416,28 @@ function toggleDocSelection(itemId, docName) {
 
             <div className="tra-card tra-card--scroll">
               {loading ? (
-                <div className="accordion-skeleton">
+                <div>
                 <Flex
                   direction="column"
                   gap="small"
-                  width="100%"
                 >
                   <Skeleton
                     id="overview-skeleton-1"
                     size="h1"
                     type="text"
+                    fullWidth="true"
                   />
                   <Skeleton
                     id="overview-skeleton-2"
                     size="h1"
                     type="text"
+                    fullWidth="true"
                   />
                   <Skeleton
                     id="overview-skeleton-3"
                     size="h1"
                     type="text"
+                    fullWidth="true"
                   />
                 </Flex>
                 </div>
