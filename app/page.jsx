@@ -426,18 +426,21 @@ function toggleDocSelection(itemId, docName) {
                     size="h1"
                     type="text"
                     fullWidth="true"
+                    height={56}
                   />
                   <Skeleton
                     id="overview-skeleton-2"
                     size="h1"
                     type="text"
                     fullWidth="true"
+                    height={56}
                   />
                   <Skeleton
                     id="overview-skeleton-3"
                     size="h1"
                     type="text"
                     fullWidth="true"
+                    height={56}
                   />
                 </Flex>
                 </div>
