@@ -1,8 +1,7 @@
-// app/api/file-proxy/route.js
 
 export async function GET(req) {
   try {
-    // Get the ?u=... query param
+    //Get the ?u=... query param
     const { searchParams } = new URL(req.url);
     const url = searchParams.get("u");
 
@@ -16,7 +15,7 @@ export async function GET(req) {
       );
     }
 
-    // Fetch the remote file
+    //Fetch the remote file
     const r = await fetch(url);
     if (!r.ok) {
       return new Response(null, { status: r.status });
@@ -24,7 +23,7 @@ export async function GET(req) {
 
     const ab = await r.arrayBuffer();
 
-    // Return it as a DOCX blob
+    //Return it as a DOCX blob
     return new Response(ab, {
       status: 200,
       headers: {

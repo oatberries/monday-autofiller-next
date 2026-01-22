@@ -14,11 +14,11 @@ import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
 const monday = mondaySdk();
+
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
 const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
-
 
 
 function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = "output.docx") {
@@ -117,6 +117,11 @@ export default function Page() {
         console.timeEnd("OPEN CASES BOARD ID AND ITEM ID");
         setBoardId(data.boardId);
         setItemId(data.itemId);
+
+        const q = `query { version { kind value } }`;
+        const version = await monday.request(q); 
+        console.log(version.version); 
+
       } catch (err) {
         console.error("Error getting context:", err);
       }
