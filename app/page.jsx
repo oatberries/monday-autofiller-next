@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
-import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP} from "./lib/queries";
+import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP, API_VERSION} from "./lib/queries";
 import { runQuery } from "./lib/monday";
 import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton, Flex } from "@vibe/core";
 import Docxtemplater from "docxtemplater";
@@ -118,9 +118,10 @@ export default function Page() {
         setBoardId(data.boardId);
         setItemId(data.itemId);
 
-        const q = `query { version { kind value } }`;
-        const version = await monday.runQuery(q); 
-        console.log(version.version); 
+        const versionQuery = await monday.runQuery(API_VERSION); 
+        const version = versionQuery?.version;
+        const value = version?.value;
+        console.log("The api version is:", value); 
 
       } catch (err) {
         console.error("Error getting context:", err);

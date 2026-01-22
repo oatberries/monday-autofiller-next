@@ -142,3 +142,13 @@ export const TEMPLATE_BOARD_AND_GROUP = `
     }
   }
 `;
+
+
+export const API_VERSION = `
+  query ApiVersion {
+    version{
+      kind 
+      value
+    }
+  }
+`;
