@@ -119,7 +119,7 @@ export default function Page() {
         setItemId(data.itemId);
 
         const q = `query { version { kind value } }`;
-        const version = await monday.request(q); 
+        const version = await monday.runQuery(q); 
         console.log(version.version); 
 
       } catch (err) {
