@@ -1,4 +1,3 @@
-import mondaySdk from "../page.jsx";
 
 //export const monday = mondaySdk();
 
