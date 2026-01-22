@@ -1,6 +1,7 @@
 'use client'
 
 import React from "react";
+import { monday } from "./lib/mondayclient";
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import mondaySdk from "monday-sdk-js";
@@ -13,7 +14,7 @@ import PizZip from "pizzip";
 import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
-const monday = mondaySdk();
+//const monday = mondaySdk();
 monday.setApiVersion("2025-10");
 
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];

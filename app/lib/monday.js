@@ -1,5 +1,6 @@
 
 //export const monday = mondaySdk();
+import { monday } from "/mondayClient";
 
 function getOpName(query) {
   const m = query.match(/\b(query|mutation)\s+([A-Za-z0-9_]+)/);
