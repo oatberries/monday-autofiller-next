@@ -6,14 +6,14 @@ import "./App.css";
 import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP, API_VERSION} from "./lib/queries";
-import { runQuery } from "./lib/monday";
+import {mondaySdk ,runQuery } from "./lib/monday";
 import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton, Flex } from "@vibe/core";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
-const monday = mondaySdk();
+//const monday = mondaySdk();
 monday.setApiVersion("2025-10");
 
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
