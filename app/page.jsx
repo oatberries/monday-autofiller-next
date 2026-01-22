@@ -118,7 +118,7 @@ export default function Page() {
         setBoardId(data.boardId);
         setItemId(data.itemId);
 
-        const versionQuery = await monday.runQuery(API_VERSION); 
+        const versionQuery = await runQuery(API_VERSION); 
         const version = versionQuery?.version;
         const value = version?.value;
         console.log("The api version is:", value); 
