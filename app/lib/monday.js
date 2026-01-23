@@ -1,5 +1,3 @@
-
-//export const monday = mondaySdk();
 import { monday } from "./mondayclient";
 
 function getOpName(query) {

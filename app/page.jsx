@@ -14,8 +14,8 @@ import PizZip from "pizzip";
 import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
-//const monday = mondaySdk();
-monday.setApiVersion("2025-10");
+
+//monday.setApiVersion("2025-10");
 
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
