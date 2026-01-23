@@ -15,8 +15,6 @@ import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
 
-//monday.setApiVersion("2025-10");
-
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
