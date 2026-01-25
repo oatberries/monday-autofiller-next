@@ -8,7 +8,7 @@ import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP, API_VERSION} from "./lib/queries";
 import { runQuery } from "./lib/monday";
-import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton, Flex } from "@vibe/core";
+import { Checkbox, Accordion, AccordionItem, AttentionBox, Button, Loader, Skeleton, Flex, Info } from "@vibe/core";
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import { saveAs } from "file-saver";
@@ -599,6 +599,22 @@ function toggleDocSelection(itemId, docName) {
             )}
 
             {/* Primary action */}
+
+            <div>
+            <Info
+              aria-label="How To Use"
+              body="Message will appear here, to give more context related information. This is meant for detailed supplemental information, where tooltips do not suffice. This is not the place for critical information for task-completion but rather paragraph-like text serving as supplemental info."
+              id="overview-info"
+              link={{
+                href: '#',
+                text: 'Learn more about content'
+              }}
+              onDialogHide={function Xs(){}}
+              onDialogShow={function Xs(){}}
+              title="Placement: Bottom start"
+            />
+            </div>
+
             <div className="tra-footer">
               <Button
                 onClick={handleFillAndDownloadClick}
