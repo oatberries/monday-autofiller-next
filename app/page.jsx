@@ -87,7 +87,6 @@ async function fetchArrayBufferViaProxy(publicUrl) {
 
 export default function Page() {
   
-  //const [context, setContext] = useState();
   const [boardId, setBoardId] = useState(null);
   const [itemId, setItemId] = useState(null);
 
@@ -350,13 +349,11 @@ function toggleDocSelection(itemId, docName) {
     );
 
     if (exists) {
-      //uncheck: remove that pair
       return prev.filter(
         d => !(d.itemId === itemId && d.docName === docName)
       );
     }
 
-    //check: add new pair
     return [...prev, { itemId, docName }];
   });
 }
@@ -550,6 +547,8 @@ function toggleDocSelection(itemId, docName) {
             )}
 
             {/* Current item fields */}
+
+{/*
             <div className="tra-card">
               <h2 className="tra-section-title">Current item fields</h2>
               <dl className="tra-fields-grid">
@@ -579,7 +578,7 @@ function toggleDocSelection(itemId, docName) {
                 </div>
               </dl>
             </div>
-
+*/}
             {/* Selected docs summary */}
             {selectedDocs.length > 0 && (
               <div className="tra-card">
@@ -613,6 +612,10 @@ function toggleDocSelection(itemId, docName) {
                   Select at least one .docx template from the list on the left.
                 </span>
               )}
+            </div>
+
+            <div className="diagnostic-panel">
+
             </div>
           </section>
         </main>
