@@ -603,7 +603,7 @@ function toggleDocSelection(itemId, docName) {
             <div>
             <Info
               aria-label="How To Use"
-              body="Message will appear here, to give more context related information. This is meant for detailed supplemental information, where tooltips do not suffice. This is not the place for critical information for task-completion but rather paragraph-like text serving as supplemental info."
+              body="Choose docx files from the left to fill in and then select fill and download selected docs button to download your filled in templates. If a template does not appear for download, make sure it is a docx file that exists in the TRA Templates board, under orders. Make sure the template contains {petitioner}, {respondent}, {drNumber}, and {csp}, written exactly as stated, in the locations where those values are expected to be filled in."
               id="overview-info"
               link={{
                 href: '#',
@@ -611,7 +611,7 @@ function toggleDocSelection(itemId, docName) {
               }}
               onDialogHide={function Xs(){}}
               onDialogShow={function Xs(){}}
-              title="Placement: Bottom start"
+              title="How to use this application:"
             />
             </div>
 
