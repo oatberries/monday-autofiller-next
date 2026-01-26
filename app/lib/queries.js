@@ -1,31 +1,3 @@
-/*export const BOARD_COLUMNS = `
-query BoardColumns($boardId: [ID!]) {
-  boards(ids: $boardId) {
-    id
-    columns { 
-        id 
-        title 
-        type 
-    }
-  }
-}
-`;
-*/
-/*export const ITEM_COLUMNS_BY_IDS = `
-  query ItemColumnsByIds($itemId: [ID!], $columnIds: [String!]) {
-    items(ids: $itemId) {
-      id
-      name
-      column_values(ids: $columnIds) {
-        id
-        title
-        text
-        value
-      }
-    }
-  }
-`;
-*/
 export const ITEM_NAME_AND_VALUES = `
   query ItemNameAndValues($itemId: [ID!]) {
     items(ids: $itemId) {
@@ -38,25 +10,6 @@ export const ITEM_NAME_AND_VALUES = `
   }
 `;
 
-/*export const BOARD_NAME = `
-query BoardName{
-  boards{
-    id
-    name
-    groups{
-      id
-      title
-      items_page{
-        items{
-          id
-          name
-        }
-      }
-    }
-  }
-}
-`
-*/
 export const FILE_URL = `
 query FileURL ($itemId: [ID!]) {
   items (ids: $itemId) {
@@ -76,7 +29,6 @@ query FileURL ($itemId: [ID!]) {
 
 `;
 
-
 export const ORDER_TYPES = `
   query OrderTypes($boardIds: [ID!], $groupIds: [String!]) {
     boards(ids: $boardIds) {
@@ -91,25 +43,6 @@ export const ORDER_TYPES = `
     }
   }
 `;
-
-/*
-export const ORDER_TYPES2 = `
-query OrderTypes{
-  boards{
-    name
-    groups{
-      title
-      items_page{
-        items{
-          id
-          name
-        }
-      }
-    }
-  }
-}
-`;
-*/
 
 export const FILE_NAMES = `
 query FileURL ($itemId: [ID!]) {
@@ -127,7 +60,6 @@ query FileURL ($itemId: [ID!]) {
     }
   }
 }
-
 `;
 
 export const TEMPLATE_BOARD_AND_GROUP = `

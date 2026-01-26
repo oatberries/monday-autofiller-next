@@ -67,7 +67,6 @@ async function getSelectedDocPublicUrl(templateItemId, docName) {
 
   const assets = data?.items?.[0]?.assets || [];
 
-  //Find the asset whose name matches the selected doc name
   const asset = assets.find((a) => a.name === docName);
 
   if (!asset?.public_url) {
@@ -108,7 +107,6 @@ export default function Page() {
 
   useEffect(() => {
     async function fetchContext() {
-
       try {
         console.time("OPEN CASES BOARD ID AND ITEM ID");
         const { data } = await monday.get("context"); 
@@ -129,8 +127,6 @@ export default function Page() {
     fetchContext();
   }, []);
   
-  
-  //this use effect is to give this app a lil speed boost by finding the template board and group id right from the start
   useEffect(() => {
   async function resolveTemplateBoardAndGroup() {
     try {
@@ -176,7 +172,6 @@ export default function Page() {
 
   useEffect(() => {
     if (!itemId) return;
-
     (async () => {
       try {
         console.time("SPECIFIC OPEN CASES VALUES- RESPONDENT, ETC..");
@@ -206,12 +201,9 @@ export default function Page() {
 
   useEffect(() => {
   if (!templateBoardId || !templateGroupId) return;
-
   let cancelled = false;
-
   async function fetchOrderTypes() {
     try {
-
       console.time("storage:get ORDER_TYPES");
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
       console.timeEnd("storage:get ORDER_TYPES");
@@ -277,10 +269,8 @@ export default function Page() {
 
   useEffect(() => {
   if (!templateItemId) return;
-
   async function fetchFileNames() {
     try {
-
       console.time("START: FETCH FILE NAMES");
       const data = await runQuery(FILE_NAMES, { itemId: [templateItemId] });
 
@@ -308,7 +298,6 @@ export default function Page() {
 }, [templateItemId]);
 
 async function handleFillAndDownloadClick() {
-
   if (selectedDocs.length === 0) {
     setError("Please select at least one document first.");
     return;
@@ -318,7 +307,6 @@ async function handleFillAndDownloadClick() {
   setFillingDoc(true);
 
   try {
-
     for (const { itemId: templateItemId, docName } of selectedDocs) {
 
     const publicUrl = await getSelectedDocPublicUrl(templateItemId, docName);
@@ -427,11 +415,10 @@ function toggleDocSelection(itemId, docName) {
               onDialogShow={function Xs(){}}
               title="How to use this application:"
             />
+            {fillingDoc && (
+              <span className="tra-status-tag">Working…</span>
+            )}
             </div>
-
-          {fillingDoc && (
-            <span className="tra-status-tag">Working…</span>
-          )}
         </header>
 
         <main className="tra-layout">
