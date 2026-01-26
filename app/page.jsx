@@ -410,10 +410,19 @@ function toggleDocSelection(itemId, docName) {
           <div className="how-to">
             <Info
               aria-label="How To Use"
-              body="
-              1) Expand order types and choose one or more docx templates to fill in.
-              2) Select fill and download selected docs to prepare and download your chosen templates. 
-              3) If a template does not appear for download, make sure it is a docx file that exists in the TRA Templates board, under orders. Make sure the template contains {petitioner}, {respondent}, {drNumber}, and {csp}, typed exactly as shown, in the locations where those values are expected to appear."
+              body={
+              <div>
+                <ol style={{ margin: 0, paddingLeft: 18 }}>
+                  <li>Expand an order type and choose one or more .docx templates.</li>
+                  <li>Click <b>Fill &amp; download selected docs</b> to prepare and download them.</li>
+                  <li>
+                    If a template doesn’t appear for download, confirm it exists in <b>TRA Templates</b> → <b>Orders</b> and contains
+                    these placeholders exactly: <code>{`{petitioner}`}</code>, <code>{`{respondent}`}</code>,{" "}
+                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>.
+                  </li>
+                </ol>
+              </div>
+            }
               id="overview-info"
               onDialogHide={function Xs(){}}
               onDialogShow={function Xs(){}}
