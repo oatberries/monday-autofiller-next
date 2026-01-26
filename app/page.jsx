@@ -407,6 +407,21 @@ function toggleDocSelection(itemId, docName) {
               Select order types and .docx templates to auto-fill with this item&apos;s data.
             </p>
           </div>
+          <div className="how-to">
+            <Info
+              aria-label="How To Use"
+              body="Choose docx files from the left to fill in and then select fill and download selected docs button to download your filled in templates. If a template does not appear for download, make sure it is a docx file that exists in the TRA Templates board, under orders. Make sure the template contains {petitioner}, {respondent}, {drNumber}, and {csp}, written exactly as stated, in the locations where those values are expected to be filled in."
+              id="overview-info"
+              link={{
+                href: '#',
+                text: 'Learn more about content'
+              }}
+              onDialogHide={function Xs(){}}
+              onDialogShow={function Xs(){}}
+              title="How to use this application:"
+            />
+            </div>
+
           {fillingDoc && (
             <span className="tra-status-tag">Working…</span>
           )}
@@ -599,22 +614,6 @@ function toggleDocSelection(itemId, docName) {
             )}
 
             {/* Primary action */}
-
-            <div className="how-to">
-            <Info
-              aria-label="How To Use"
-              body="Choose docx files from the left to fill in and then select fill and download selected docs button to download your filled in templates. If a template does not appear for download, make sure it is a docx file that exists in the TRA Templates board, under orders. Make sure the template contains {petitioner}, {respondent}, {drNumber}, and {csp}, written exactly as stated, in the locations where those values are expected to be filled in."
-              id="overview-info"
-              link={{
-                href: '#',
-                text: 'Learn more about content'
-              }}
-              onDialogHide={function Xs(){}}
-              onDialogShow={function Xs(){}}
-              title="How to use this application:"
-            />
-            </div>
-
             <div className="tra-footer">
               <Button
                 onClick={handleFillAndDownloadClick}
