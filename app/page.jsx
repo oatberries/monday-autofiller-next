@@ -395,6 +395,10 @@ function toggleDocSelection(itemId, docName) {
             </p>
           </div>
           <div className="how-to">
+            {fillingDoc && (
+              <span className="tra-status-tag">Working…</span>
+            )}
+
             <Info
               aria-label="How To Use"
               body={
@@ -415,9 +419,6 @@ function toggleDocSelection(itemId, docName) {
               onDialogShow={function Xs(){}}
               title="How to use this application:"
             />
-            {fillingDoc && (
-              <span className="tra-status-tag">Working…</span>
-            )}
             </div>
         </header>
 
