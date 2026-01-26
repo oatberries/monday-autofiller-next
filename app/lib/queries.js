@@ -1,4 +1,4 @@
-export const BOARD_COLUMNS = `
+/*export const BOARD_COLUMNS = `
 query BoardColumns($boardId: [ID!]) {
   boards(ids: $boardId) {
     id
@@ -10,8 +10,8 @@ query BoardColumns($boardId: [ID!]) {
   }
 }
 `;
-
-export const ITEM_COLUMNS_BY_IDS = `
+*/
+/*export const ITEM_COLUMNS_BY_IDS = `
   query ItemColumnsByIds($itemId: [ID!], $columnIds: [String!]) {
     items(ids: $itemId) {
       id
@@ -25,7 +25,7 @@ export const ITEM_COLUMNS_BY_IDS = `
     }
   }
 `;
-
+*/
 export const ITEM_NAME_AND_VALUES = `
   query ItemNameAndValues($itemId: [ID!]) {
     items(ids: $itemId) {
@@ -38,7 +38,7 @@ export const ITEM_NAME_AND_VALUES = `
   }
 `;
 
-export const BOARD_NAME = `
+/*export const BOARD_NAME = `
 query BoardName{
   boards{
     id
@@ -56,7 +56,7 @@ query BoardName{
   }
 }
 `
-
+*/
 export const FILE_URL = `
 query FileURL ($itemId: [ID!]) {
   items (ids: $itemId) {
@@ -92,7 +92,7 @@ export const ORDER_TYPES = `
   }
 `;
 
-
+/*
 export const ORDER_TYPES2 = `
 query OrderTypes{
   boards{
@@ -109,7 +109,7 @@ query OrderTypes{
   }
 }
 `;
-
+*/
 
 export const FILE_NAMES = `
 query FileURL ($itemId: [ID!]) {

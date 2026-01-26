@@ -4,7 +4,6 @@ import React from "react";
 import { monday } from "./lib/mondayclient";
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
-import mondaySdk from "monday-sdk-js";
 import "@vibe/core/tokens";
 import { ITEM_NAME_AND_VALUES, FILE_URL, ORDER_TYPES, FILE_NAMES, TEMPLATE_BOARD_AND_GROUP, API_VERSION} from "./lib/queries";
 import { runQuery } from "./lib/monday";
