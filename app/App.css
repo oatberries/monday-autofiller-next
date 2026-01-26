@@ -167,6 +167,11 @@
 }
 
 /* Footer */
+.how-to {
+  display: flex;
+  justify-content: flex-end;
+}
+
 
 .tra-footer {
   display: flex;

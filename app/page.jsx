@@ -600,7 +600,7 @@ function toggleDocSelection(itemId, docName) {
 
             {/* Primary action */}
 
-            <div>
+            <div className="how-to">
             <Info
               aria-label="How To Use"
               body="Choose docx files from the left to fill in and then select fill and download selected docs button to download your filled in templates. If a template does not appear for download, make sure it is a docx file that exists in the TRA Templates board, under orders. Make sure the template contains {petitioner}, {respondent}, {drNumber}, and {csp}, written exactly as stated, in the locations where those values are expected to be filled in."
