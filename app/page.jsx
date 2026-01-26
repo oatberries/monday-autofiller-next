@@ -130,7 +130,7 @@ export default function Page() {
     fetchContext();
   }, []);
   
-  
+  /*
   //this use effect is to give this app a lil speed boost by finding the template board and group id right from the start
   useEffect(() => {
   async function resolveTemplateBoardAndGroup() {
@@ -174,7 +174,7 @@ export default function Page() {
     resolveTemplateBoardAndGroup();
     
   }, []);
-
+*/
   useEffect(() => {
     if (!itemId) return;
 
