@@ -210,7 +210,7 @@ export default function Page() {
   let cancelled = false;
   async function fetchOrderTypes() {
     try {
-    /*console.time("storage:get ORDER_TYPES");
+    console.time("storage:get ORDER_TYPES");
       const cached = await monday.storage.getItem(ORDER_TYPES_CACHE_KEY);
       console.timeEnd("storage:get ORDER_TYPES");
 
@@ -229,7 +229,7 @@ export default function Page() {
         return;
       }
 
-      console.log("[TRA] Cache empty -> Fetching order types via GraphQL");*/
+      console.log("[TRA] Cache empty -> Fetching order types via GraphQL");
       console.time("FETCH ORDER TYPES");
       const data = await runQuery(ORDER_TYPES, {
         boardIds: [templateBoardId],
@@ -247,7 +247,7 @@ export default function Page() {
       }
 
       setLoading(false);
-     /*
+     
       console.log("[TRA] Saving order types to storage:", items);
 
       const writeResult= await monday.storage.setItem(ORDER_TYPES_CACHE_KEY, {
@@ -255,7 +255,7 @@ export default function Page() {
       });
 
       console.log("[TRA] Write result:", writeResult);
-     */ 
+     
     } catch (err) {
       if (!cancelled) {
         console.error("Error fetching order types:", err);
