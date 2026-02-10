@@ -17,7 +17,7 @@ import { Analytics } from "@vercel/analytics/next"
 const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent", "Person To Be Served Address"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
-//const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
+const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
 
 
 function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, personToBeServedAddress }, filename = "output.docx") {
