@@ -14,13 +14,13 @@ import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
 
-const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent"];
+const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent", "Person To Be Served Address"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
 const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
 
 
-function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = "output.docx") {
+function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, personToBeServedAddress }, filename = "output.docx") {
 
   const uint8 = new Uint8Array(ab);
   const zip = new PizZip(uint8);
@@ -36,6 +36,8 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber }, filename = 
     respondent,
     csp,
     drNumber,
+    "type of case": typeOfCase,
+    "person to be served address": personToBeServedAddress,
   });
 
   try {
@@ -92,6 +94,8 @@ export default function Page() {
   const[respondent, setRespondent] = useState(null);
   const [csp, setCsp] = useState(null);
   const [drNumber, setDRNumber] = useState(null);
+  const[typeOfCase, setTypeOfCase] = useState(null);
+  const[personToBeServedAddress, setPersonToBeServedAddress] = useState(null);
 
   const [error, setError] = useState("");
   const [templateBoardId, setTemplateBoardId] = useState(null);
@@ -190,6 +194,8 @@ export default function Page() {
         setRespondent(byTitle["Respondent"] ?? "");
         setCsp(byTitle["CSP"] ?? "");
         setDRNumber(byTitle["DR#"] ?? "");
+        setTypeOfCase(byTitle["Type of Case"] ?? "");
+        setPersonToBeServedAddress(byTitle["Person To Be Served Address"] ?? "");
 
       } catch (e) {
         setError(e.message || "Failed to fetch item values");
@@ -318,6 +324,8 @@ async function handleFillAndDownloadClick() {
       respondent: respondent || "",
       csp: csp || "",
       drNumber: drNumber || "",
+      typeOfCase: typeOfCase || "",
+      personToBeServedAddress: personToBeServedAddress || "",
     }, docName);
 
   }
