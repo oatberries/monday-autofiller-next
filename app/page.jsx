@@ -417,7 +417,7 @@ function toggleDocSelection(itemId, docName) {
                   <li>
                     If a template doesn’t appear for download, confirm it exists in <b>TRA Templates</b> → <b>Orders</b> and contains
                     these placeholders exactly: <code>{`{petitioner}`}</code>, <code>{`{respondent}`}</code>,
-                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, and <code>{`{person to be served address}`}</code> in the places where those values are expected to appear.
+                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, and <code>{`{person to be served address}`}</code>, in the places where those values are expected to appear.
                   </li>
                 </ol>
               </div>
