@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Monday.com Legal Document Autofiller
+Custom automation tool for generating populated legal documents directly from Monday.com board data.
+> ⚠️ This is a client-specific implementation and is not a plug-and-play Monday application.
 
-## Getting Started
+## Intended Use
 
-First, run the development server:
+This application was developed for a specific [Monday.com] workspace configuration.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+It depends on:
+- A predefined board structure
+- Specific column mappings
+- Preconfigured document templates
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will not function correctly in other Monday environments without additional configuration and mappings.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Key Capabilities
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The autofiller enables users to:
 
-## Learn More
+- Retrieve case data directly from Monday items  
+- Automatically populate legal document templates  
+- Generate completed documents in seconds  
+- Reduce manual entry errors  
 
-To learn more about Next.js, take a look at the following resources:
+## User Workflow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Typical usage flow:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Open a case item within the designated board  
+2. Launch the Autofiller app from the item view  
+3. Select one or more document templates  
+4. Click **Fill & Download Selected Docs**  
+5. Download the generated files
 
-## Deploy on Vercel
+## Required Monday Configuration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This implementation expects certain Monday resources to exist.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Boards
+
+- `TRA Templates`
+
+### Groups
+
+- `Orders`
+
+### Required Data Fields
+
+The autofiller maps case data from specific columns, including:
+
+- CSP  
+- DR#  
+- Type of Case  
+- Petitioner  
+- Respondent  
+- Person To Be Served Address  
+
+> Column titles and structure are expected to match the configured workspace.
+
+## Technical Notes
+
+- Built with React and the Monday SDK  
+- Uses Monday GraphQL API for data retrieval  
+- Document generation powered by Docxtemplater + PizZip
+- Deployed on Vercel
