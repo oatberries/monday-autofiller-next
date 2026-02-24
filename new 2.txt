@@ -1,0 +1,28 @@
+This is a custom automation tool for generating populated legal documents directly from Monday boards.
+
+## Intended Use
+
+This application was developed for a specific [Monday.com] workspace.
+
+It depends on:
+- Specific board names
+- Specific column names
+- Specific template files
+
+The app will not function correctly in other Monday accounts without configuration changes.
+
+## What This App Does
+
+This document filler allows users to:
+
+- Pull case data directly from Monday items
+- Automatically populate legal document templates
+- Download completed documents instantly
+- Reduce manual data entry errors
+
+## How To Use
+1. Select the desired case item
+2. Open the autofiller app within the item view
+3. Choose the templates you'd like to fill
+4. Click generate templates
+5. Download the completed file(s)

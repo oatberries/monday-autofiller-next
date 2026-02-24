@@ -64,7 +64,7 @@ query FileURL ($itemId: [ID!]) {
 
 export const TEMPLATE_BOARD_AND_GROUP = `
   query TemplateBoardAndGroup {
-    boards(limit: 25) {
+    boards{
       id
       name
       groups {
