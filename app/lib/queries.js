@@ -33,7 +33,7 @@ export const ORDER_TYPES = `
   query OrderTypes($boardIds: [ID!], $groupIds: [String!]) {
     boards(ids: $boardIds) {
       groups(ids: $groupIds) {
-        items_page {
+        items_page (limit: 100) {
           items {
             id
             name
