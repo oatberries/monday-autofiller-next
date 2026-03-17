@@ -14,13 +14,13 @@ import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
 
-const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent", "Person To Be Served Address"];
+const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent", "Petitioner Address", "Respondent Address", "ZLRA", "Caption", "Reason"];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
 //const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
 
 
-function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, personToBeServedAddress }, filename = "output.docx") {
+function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, petitionerAddress, respondentAddress, zlra, caption, reason }, filename = "output.docx") {
 
   const uint8 = new Uint8Array(ab);
   const zip = new PizZip(uint8);
@@ -37,7 +37,11 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, p
     csp,
     drNumber,
     "type of case": typeOfCase,
-    "person to be served address": personToBeServedAddress,
+    "respondent address": respondentAddress,
+    "petitioner address": petitionerAddress,
+    zlra,
+    caption,
+    reason,
   });
 
   try {
@@ -95,7 +99,11 @@ export default function Page() {
   const [csp, setCsp] = useState(null);
   const [drNumber, setDRNumber] = useState(null);
   const[typeOfCase, setTypeOfCase] = useState(null);
-  const[personToBeServedAddress, setPersonToBeServedAddress] = useState(null);
+  const[petitionerAddress, setPetitionerAddress] = useState(null);
+  const[respondentAddress, setRespondentAddress] = useState(null);
+  const[zlra, setZlra] = useState(null);
+  const[caption, setCaption] = useState(null);
+  const[reason, setReason] = useState(null);
 
   const [error, setError] = useState("");
   const [templateBoardId, setTemplateBoardId] = useState(null);
@@ -195,7 +203,11 @@ export default function Page() {
         setCsp(byTitle["CSP"] ?? "");
         setDRNumber(byTitle["DR#"] ?? "");
         setTypeOfCase(byTitle["Type of Case"] ?? "");
-        setPersonToBeServedAddress(byTitle["Person To Be Served Address"] ?? "");
+        setPetitionerAddress(byTitle["Petitioner Address"] ?? "");
+        setRespondentAddress(byTitle["Respondent Address"] ?? "");
+        setZlra(byTitle["ZLRA"] ?? "");
+        setCaption(byTitle["Caption"] ?? "");
+        setReason(byTitle["Reason"] ?? "");
 
       } catch (e) {
         setError(e.message || "Failed to fetch item values");
@@ -327,7 +339,11 @@ async function handleFillAndDownloadClick() {
       csp: csp || "",
       drNumber: drNumber || "",
       typeOfCase: typeOfCase || "",
-      personToBeServedAddress: personToBeServedAddress || "",
+      respondentAddress: respondentAddress || "",
+      petitionerAddress: petitionerAddress || "",
+      zlra: zlra || "",
+      caption: caption || "",
+      reason: reason || "",
     }, docName);
 
   }
@@ -419,7 +435,7 @@ function toggleDocSelection(itemId, docName) {
                   <li>
                     If a template doesn’t appear for download, confirm it exists in <b>TRA Templates</b> → <b>Orders</b> and contains
                     these placeholders exactly: <code>{`{petitioner}`}</code>, <code>{`{respondent}`}</code>,
-                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, and <code>{`{person to be served address}`}</code>, in the places where those values are expected to appear.
+                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, <code>{`{respondent address}`}</code>, <code>{`{petitioner address}`}</code>, <code>{`{zlra}`}</code>, <code>{`{caption}`}</code>, and <code>{`{reason}`}</code>, in the places where those values are expected to appear.
                   </li>
                 </ol>
               </div>
