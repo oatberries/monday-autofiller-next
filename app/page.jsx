@@ -14,13 +14,13 @@ import { saveAs } from "file-saver";
 import { Analytics } from "@vercel/analytics/next"
 
 
-const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent", "Petitioner Address", "Respondent Address", "ZLRA", "Caption", "Reason"];
+const WANTED_TITLES = ["CSP", "DR#", "Type of Case", "Petitioner", "Respondent", "Petitioner Address", "Respondent Address", "ZLRA", "Caption", "Reason", "Children", "Hrg Date", "Time", "Duration", "Notes", "FJ Date", "Ongoing", "Arrears", "Repay" ];
 const TEMPLATE_BOARD_NAME = "TRA Templates";
 const ORDER_GROUP_TITLE = "Orders";
 //const ORDER_TYPES_CACHE_KEY = "orderTypesCache_v1";
 
 
-function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, petitionerAddress, respondentAddress, zlra, caption, reason }, filename = "output.docx") {
+function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, petitionerAddress, respondentAddress, zlra, caption, reason, children, hrgDate, time, duration, notes, fjDate, ongoing, arrears, repay }, filename = "output.docx") {
 
   const uint8 = new Uint8Array(ab);
   const zip = new PizZip(uint8);
@@ -42,6 +42,15 @@ function fillTemplate(ab, { petitioner, respondent, csp, drNumber, typeOfCase, p
     zlra,
     caption,
     reason,
+    children,
+    "hrg date": hrgDate,
+    time,
+    duration,
+    notes,
+    "fj date": fjDate,
+    ongoing,
+    arrears,
+    repay,
   });
 
   try {
@@ -104,6 +113,15 @@ export default function Page() {
   const[zlra, setZlra] = useState(null);
   const[caption, setCaption] = useState(null);
   const[reason, setReason] = useState(null);
+  const[children, setChildren] = useState(null);
+  const[hrgDate, setHrgDate] = useState(null);
+  const[time, setTime] = useState(null);
+  const[duration, setDuration] = useState(null);
+  const[notes, setNotes] = useState(null);
+  const[fjDate, setFjDate] = useState(null);
+  const[ongoing, setOngoing] = useState(null);
+  const[arrears, setArrears] = useState(null);
+  const[repay, setRepay] = useState(null);
 
   const [error, setError] = useState("");
   const [templateBoardId, setTemplateBoardId] = useState(null);
@@ -208,6 +226,15 @@ export default function Page() {
         setZlra(byTitle["ZLRA"] ?? "");
         setCaption(byTitle["Caption"] ?? "");
         setReason(byTitle["Reason"] ?? "");
+        setChildren(byTitle["Children"] ?? "");
+        setHrgDate(byTitle["Hrg Date"] ?? "");
+        setTime(byTitle["Time"] ?? "");
+        setDuration(byTitle["Duration"] ?? "");
+        setNotes(byTitle["Notes"] ?? "");
+        setFjDate(byTitle["FJ Date"] ?? "");
+        setOngoing(byTitle["Ongoing"] ?? "");
+        setArrears(byTitle["Arrears"] ?? "");
+        setRepay(byTitle["Repay"] ?? "");
 
       } catch (e) {
         setError(e.message || "Failed to fetch item values");
@@ -344,6 +371,15 @@ async function handleFillAndDownloadClick() {
       zlra: zlra || "",
       caption: caption || "",
       reason: reason || "",
+      children: children || "",
+      hrgDate: hrgDate || "",
+      time: time || "",
+      duration: duration || "",
+      notes: notes || "",
+      fjDate: fjDate || "",
+      ongoing: ongoing || "",
+      arrears: arrears || "", 
+      repay: repay || "",
     }, docName);
 
   }
@@ -435,7 +471,7 @@ function toggleDocSelection(itemId, docName) {
                   <li>
                     If a template doesn’t appear for download, confirm it exists in <b>TRA Templates</b> → <b>Orders</b> and contains
                     these placeholders exactly: <code>{`{petitioner}`}</code>, <code>{`{respondent}`}</code>,
-                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, <code>{`{respondent address}`}</code>, <code>{`{petitioner address}`}</code>, <code>{`{zlra}`}</code>, <code>{`{caption}`}</code>, and <code>{`{reason}`}</code>, in the places where those values are expected to appear.
+                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, <code>{`{respondent address}`}</code>, <code>{`{petitioner address}`}</code>, <code>{`{zlra}`}</code>, <code>{`{caption}`}</code>, <code>{`{children}`}</code>, <code>{`{hrg date}`}</code>, <code>{`{time}`}</code>, <code>{`{duration}`}</code>, <code>{`{notes}`}</code>, <code>{`{fj date}`}</code>, <code>{`{ongoing}`}</code>, <code>{`{arrears}`}</code>, <code>{`{repay}`}</code>, and <code>{`{reason}`}</code>, in the places where those values are expected to appear.
                   </li>
                 </ol>
               </div>
