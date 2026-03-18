@@ -471,7 +471,7 @@ function toggleDocSelection(itemId, docName) {
                   <li>
                     If a template doesn’t appear for download, confirm it exists in <b>TRA Templates</b> → <b>Orders</b> and contains
                     these placeholders exactly: <code>{`{petitioner}`}</code>, <code>{`{respondent}`}</code>,
-                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, <code>{`{respondent address}`}</code>, <code>{`{petitioner address}`}</code>, <code>{`{zlra}`}</code>, <code>{`{caption}`}</code>, <code>{`{children}`}</code>, <code>{`{hrg date}`}</code>, <code>{`{time}`}</code>, <code>{`{duration}`}</code>, <code>{`{notes}`}</code>, <code>{`{fj date}`}</code>, <code>{`{ongoing}`}</code>, <code>{`{arrears}`}</code>, <code>{`{repay}`}</code>, and <code>{`{reason}`}</code>, in the places where those values are expected to appear.
+                    <code>{`{drNumber}`}</code>, <code>{`{csp}`}</code>, <code>{`{type of case}`}</code>, <code>{`{respondent address}`}</code>, <code>{`{petitioner address}`}</code>, <code>{`{zlra}`}</code>, <code>{`{caption}`}</code>, <code>{`{reason}`}</code>, <code>{`{children}`}</code>, <code>{`{hrg date}`}</code>, <code>{`{time}`}</code>, <code>{`{duration}`}</code>, <code>{`{notes}`}</code>, <code>{`{fj date}`}</code>, <code>{`{ongoing}`}</code>, <code>{`{arrears}`}</code>, and <code>{`{repay}`}</code>, in the places where those values are expected to appear.
                   </li>
                 </ol>
               </div>
